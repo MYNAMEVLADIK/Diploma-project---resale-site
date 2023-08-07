@@ -60,5 +60,5 @@ public class Ads {
      */
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "ads"
             , cascade = CascadeType.ALL, orphanRemoval = true)
-    private Collection<Comments> comments;
+    private Collection<Comment> comments;
 }

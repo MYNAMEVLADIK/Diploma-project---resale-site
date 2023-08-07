@@ -12,7 +12,7 @@ import java.time.Instant;
 @EqualsAndHashCode
 @NoArgsConstructor
 @Table(name = "comments")
-public class Comments {
+public class Comment {
 
     /**
      * Id комментария
