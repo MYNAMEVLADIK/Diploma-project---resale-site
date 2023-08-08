@@ -1,0 +1,212 @@
+Index: src/main/java/ru/skypro/homework/dto/Register.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ru.skypro.homework.dto;\r\n\r\nimport lombok.Data;\r\n\r\n@Data\r\npublic class Register {\r\n\r\n    private String username;\r\n    private String password;\r\n    private String firstName;\r\n    private String lastName;\r\n    private String phone;\r\n    private Role role;\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/ru/skypro/homework/dto/Register.java b/src/main/java/ru/skypro/homework/dto/Register.java
+--- a/src/main/java/ru/skypro/homework/dto/Register.java	(revision a9b4aa425810e3e5f350aaf7f5205a3c584dd266)
++++ b/src/main/java/ru/skypro/homework/dto/Register.java	(date 1691397399616)
+@@ -1,8 +1,13 @@
+ package ru.skypro.homework.dto;
+ 
+-import lombok.Data;
++
++import lombok.AllArgsConstructor;
++import lombok.NoArgsConstructor;
+ 
+-@Data
++import java.util.Objects;
++
++@AllArgsConstructor
++@NoArgsConstructor
+ public class Register {
+ 
+     private String username;
+@@ -11,4 +16,75 @@
+     private String lastName;
+     private String phone;
+     private Role role;
++
++    public Register(String username, String password, String firstName, String lastName, String phone, Role role) {
++        this.username = username;
++        this.password = password;
++        this.firstName = firstName;
++        this.lastName = lastName;
++        this.phone = phone;
++        this.role = role;
++    }
++
++    public String getUsername() {
++        return username;
++    }
++
++    public void setUsername(String username) {
++        this.username = username;
++    }
++
++    public String getPassword() {
++        return password;
++    }
++
++    public void setPassword(String password) {
++        this.password = password;
++    }
++
++    public String getFirstName() {
++        return firstName;
++    }
++
++    public void setFirstName(String firstName) {
++        this.firstName = firstName;
++    }
++
++    public String getLastName() {
++        return lastName;
++    }
++
++    public void setLastName(String lastName) {
++        this.lastName = lastName;
++    }
++
++    public String getPhone() {
++        return phone;
++    }
++
++    public void setPhone(String phone) {
++        this.phone = phone;
++    }
++
++    public Role getRole() {
++        return role;
++    }
++
++    public void setRole(Role role) {
++        this.role = role;
++    }
++
++    @Override
++    public boolean equals(Object o) {
++        if (this == o) return true;
++        if (o == null || getClass() != o.getClass()) return false;
++        Register register = (Register) o;
++        return Objects.equals(username, register.username) && Objects.equals(password, register.password) && Objects.equals(firstName, register.firstName) && Objects.equals(lastName, register.lastName) && Objects.equals(phone, register.phone) && role == register.role;
++    }
++
++    @Override
++    public int hashCode() {
++        return Objects.hash(username, password, firstName, lastName, phone, role);
++    }
++
+ }
+Index: src/main/java/ru/skypro/homework/dto/Login.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package ru.skypro.homework.dto;\r\n\r\nimport lombok.Data;\r\n\r\n@Data\r\npublic class Login {\r\n\r\n    private String username;\r\n    private String password;\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/ru/skypro/homework/dto/Login.java b/src/main/java/ru/skypro/homework/dto/Login.java
+--- a/src/main/java/ru/skypro/homework/dto/Login.java	(revision a9b4aa425810e3e5f350aaf7f5205a3c584dd266)
++++ b/src/main/java/ru/skypro/homework/dto/Login.java	(date 1691397399615)
+@@ -1,10 +1,51 @@
+ package ru.skypro.homework.dto;
+ 
+-import lombok.Data;
++
+ 
+-@Data
++import lombok.AllArgsConstructor;
++import lombok.NoArgsConstructor;
++
++import java.util.Objects;
++
++@AllArgsConstructor
++@NoArgsConstructor
+ public class Login {
+ 
+     private String username;
+     private String password;
++
++    public Login(String username, String password) {
++        this.username = username;
++        this.password = password;
++    }
++
++    public String getUsername() {
++        return username;
++    }
++
++    public void setUsername(String username) {
++        this.username = username;
++    }
++
++    public String getPassword() {
++        return password;
++    }
++
++    public void setPassword(String password) {
++        this.password = password;
++    }
++
++    @Override
++    public boolean equals(Object o) {
++        if (this == o) return true;
++        if (o == null || getClass() != o.getClass()) return false;
++        Login login = (Login) o;
++        return Objects.equals(username, login.username) && Objects.equals(password, login.password);
++    }
++
++    @Override
++    public int hashCode() {
++        return Objects.hash(username, password);
++    }
++
+ }
+Index: README.md
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+># Онлайн сервис по перепродаже вещей!\r\n\r\n## Описание\r\n\r\nПлатформа предназначена для размещения объявлений частными пользователями по продаже товаров.\r\n\r\n#### Основная задача - удовлетворить потребности продавцов и потенциальных покупателей\r\n\r\n## Планируемый функционал:\r\n1. Авторизация и аутентификация пользователей;\r\n2. Распределение ролей между пользователями: пользователь и администратор;\r\n3. Под каждым объявлением пользователи могут оставлять отзывы;\r\n4. В заголовке сайта можно осуществлять поиск объявлений по названию;\r\n5. Есть возможность показывать и сохранять картинки объявлений;\r\n\r\n## Команда проекта:\r\n[Михаил Мелехин](https://github.com/MelekhinMikhail)\r\n\r\n[Полина Маслова](https://github.com/Polyxen1a)\r\n\r\n[Житарь Владислав](https://github.com/R2D2VLAD)\r\n\r\n## Стек технологий:\r\n* Среда разработки IDE: IntelliJ IDEA Community Edition 2023.2\r\n* Java 17\r\n* Spring Framework\r\n* PostgreSQL\r\n* Сборщик Maven v.2.7.7\r\n* UI API Swagger-ui\r\n* Docker\r\n* ...\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/README.md b/README.md
+--- a/README.md	(revision a9b4aa425810e3e5f350aaf7f5205a3c584dd266)
++++ b/README.md	(date 1691397399615)
+@@ -1,5 +1,7 @@
+ # Онлайн сервис по перепродаже вещей!
+ 
++## Команда разработки "JavaLand":) 
++
+ ## Описание
+ 
+ Платформа предназначена для размещения объявлений частными пользователями по продаже товаров.
+Index: src/main/resources/application.properties
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>logging.level.root=info\r\nspring.datasource.url=jdbc:postgresql://localhost:5432/postgres\r\nspring.datasource.username=postgres\r\nspring.datasource.password=0000\r\nspring.jpa.hibernate.ddl-auto=update
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>ISO-8859-1
+===================================================================
+diff --git a/src/main/resources/application.properties b/src/main/resources/application.properties
+--- a/src/main/resources/application.properties	(revision a9b4aa425810e3e5f350aaf7f5205a3c584dd266)
++++ b/src/main/resources/application.properties	(date 1691397399618)
+@@ -1,5 +1,10 @@
+-logging.level.root=info
+-spring.datasource.url=jdbc:postgresql://localhost:5432/postgres
+-spring.datasource.username=postgres
+-spring.datasource.password=0000
+-spring.jpa.hibernate.ddl-auto=update
+\ No newline at end of file
++logging.level.root = info
++spring.datasource.url = jdbc:postgresql://localhost:5432/postgres
++spring.datasource.username = postgres
++spring.datasource.password = 0000
++spring.jpa.hibernate.ddl-auto = update
++
++spring.liquibase.change-log = classpath:liquibase/changelog-master.yml
++
++path.to.pictures.folder = src/main/resources
++name.of.pictures.folder = Images.png
+\ No newline at end of file
