@@ -1,0 +1,371 @@
+Index: src/main/resources/liquibase/changeLog-master.yml
+===================================================================
+diff --git a/src/main/resources/liquibase/changeLog-master.yml b/src/main/resources/liquibase/changeLog-master.yml
+deleted file mode 100644
+--- a/src/main/resources/liquibase/changeLog-master.yml	(revision 8906745d7473b1a22d4ae7e5ca7775a6fe48e369)
++++ /dev/null	(revision 8906745d7473b1a22d4ae7e5ca7775a6fe48e369)
+@@ -1,3 +0,0 @@
+-databaseChangeLog:
+-  - include:
+-      file: liquibase/database.sql
+\ No newline at end of file
+Index: src/main/java/ru/skypro/homework/repository/UserRepository.java
+===================================================================
+diff --git a/src/main/java/ru/skypro/homework/repository/UserRepository.java b/src/main/java/ru/skypro/homework/repository/UserRepository.java
+deleted file mode 100644
+--- a/src/main/java/ru/skypro/homework/repository/UserRepository.java	(revision 8906745d7473b1a22d4ae7e5ca7775a6fe48e369)
++++ /dev/null	(revision 8906745d7473b1a22d4ae7e5ca7775a6fe48e369)
+@@ -1,16 +0,0 @@
+-package ru.skypro.homework.repository;
+-
+-import org.springframework.data.jpa.repository.JpaRepository;
+-import org.springframework.stereotype.Repository;
+-import ru.skypro.homework.entity.User;
+-
+-import java.util.Optional;
+-
+-@Repository
+-public interface UserRepository extends JpaRepository<User, Integer> {
+-
+-    /**
+-     * Поиск пользователя по email
+-     */
+-    Optional<User> findByEmail(String email);
+-}
+Index: src/main/java/ru/skypro/homework/repository/CommentRepository.java
+===================================================================
+diff --git a/src/main/java/ru/skypro/homework/repository/CommentRepository.java b/src/main/java/ru/skypro/homework/repository/CommentRepository.java
+deleted file mode 100644
+--- a/src/main/java/ru/skypro/homework/repository/CommentRepository.java	(revision 8906745d7473b1a22d4ae7e5ca7775a6fe48e369)
++++ /dev/null	(revision 8906745d7473b1a22d4ae7e5ca7775a6fe48e369)
+@@ -1,18 +0,0 @@
+-package ru.skypro.homework.repository;
+-
+-import org.springframework.data.jpa.repository.JpaRepository;
+-import org.springframework.stereotype.Repository;
+-import ru.skypro.homework.entity.Comment;
+-
+-import java.util.List;
+-
+-@Repository
+-public interface CommentRepository extends JpaRepository<Comment, Integer> {
+-
+-    /**
+-     * Поиск комментария по id объявления
+-     */
+-    List<Comment> findByAdId(Integer id);
+-}
+-
+-
+Index: src/main/java/ru/skypro/homework/entity/Ads.java
+===================================================================
+diff --git a/src/main/java/ru/skypro/homework/entity/Ads.java b/src/main/java/ru/skypro/homework/entity/Ads.java
+deleted file mode 100644
+--- a/src/main/java/ru/skypro/homework/entity/Ads.java	(revision 8906745d7473b1a22d4ae7e5ca7775a6fe48e369)
++++ /dev/null	(revision 8906745d7473b1a22d4ae7e5ca7775a6fe48e369)
+@@ -1,64 +0,0 @@
+-package ru.skypro.homework.entity;
+-
+-import lombok.AllArgsConstructor;
+-import lombok.Data;
+-import lombok.EqualsAndHashCode;
+-import lombok.NoArgsConstructor;
+-
+-import javax.persistence.*;
+-import java.util.Collection;
+-
+-@Entity
+-@Data
+-@EqualsAndHashCode
+-@NoArgsConstructor
+-@AllArgsConstructor
+-@Table(name = "ads")
+-public class Ads {
+-
+-    /**
+-     * Id объявления
+-     */
+-    @Id
+-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+-    @Column(name = "id")
+-    private Integer id;
+-
+-    /**
+-     * Автор объявления
+-     */
+-    @ManyToOne(fetch = FetchType.EAGER)
+-    @JoinColumn(name = "user_id")
+-    private User user;
+-
+-    /**
+-     * Название объявления
+-     */
+-    @Column(name = "description")
+-    private String description;
+-
+-    /**
+-     * Цена объявления
+-     */
+-    @Column(name = "price")
+-    private Integer price;
+-
+-    /**
+-     * Описание объявления
+-     */
+-    @Column(name = "title")
+-    private String title;
+-
+-    /**
+-     * Картинка объявления
+-     */
+-    @Column(name = "image_path")
+-    private String imagePath;
+-
+-    /**
+-     * Комментарии объявления
+-     */
+-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "ads"
+-            , cascade = CascadeType.ALL, orphanRemoval = true)
+-    private Collection<Comment> comments;
+-}
+Index: src/main/java/ru/skypro/homework/repository/AdsRepository.java
+===================================================================
+diff --git a/src/main/java/ru/skypro/homework/repository/AdsRepository.java b/src/main/java/ru/skypro/homework/repository/AdsRepository.java
+deleted file mode 100644
+--- a/src/main/java/ru/skypro/homework/repository/AdsRepository.java	(revision 8906745d7473b1a22d4ae7e5ca7775a6fe48e369)
++++ /dev/null	(revision 8906745d7473b1a22d4ae7e5ca7775a6fe48e369)
+@@ -1,22 +0,0 @@
+-package ru.skypro.homework.repository;
+-
+-import org.springframework.data.jpa.repository.JpaRepository;
+-import org.springframework.stereotype.Repository;
+-import ru.skypro.homework.entity.Ads;
+-import ru.skypro.homework.entity.User;
+-
+-import java.util.List;
+-
+-@Repository
+-public interface AdsRepository extends JpaRepository<Ads, Integer> {
+-
+-    /**
+-     * Поиск объявления по названию
+-     */
+-    List<Ads> SearchRorAnAdByName(String description);
+-
+-    /**
+-     * Поиск объявлений по пользователю
+-     */
+-    List<Ads> findByUser(User user);
+-}
+Index: src/main/java/ru/skypro/homework/entity/Comment.java
+===================================================================
+diff --git a/src/main/java/ru/skypro/homework/entity/Comment.java b/src/main/java/ru/skypro/homework/entity/Comment.java
+deleted file mode 100644
+--- a/src/main/java/ru/skypro/homework/entity/Comment.java	(revision 8906745d7473b1a22d4ae7e5ca7775a6fe48e369)
++++ /dev/null	(revision 8906745d7473b1a22d4ae7e5ca7775a6fe48e369)
+@@ -1,49 +0,0 @@
+-package ru.skypro.homework.entity;
+-
+-import lombok.Data;
+-import lombok.EqualsAndHashCode;
+-import lombok.NoArgsConstructor;
+-
+-import javax.persistence.*;
+-import java.time.Instant;
+-
+-@Entity
+-@Data
+-@EqualsAndHashCode
+-@NoArgsConstructor
+-@Table(name = "comments")
+-public class Comment {
+-
+-    /**
+-     * Id комментария
+-     */
+-    @Id
+-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+-    private Integer id;
+-
+-    /**
+-     * Автор комментария
+-     */
+-    @ManyToOne
+-    @JoinColumn(name = "user_id")
+-    private User user;
+-
+-    /**
+-     * Текст комментария
+-     */
+-    @Column(name = "text")
+-    private String text;
+-
+-    /**
+-     * Объявление комментария
+-     */
+-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+-    @JoinColumn(name = "ads_id")
+-    private Ads ads;
+-
+-    /**
+-     * Дата и время комментария
+-     */
+-    @Column(name = "create_at")
+-    private Instant createdAt;
+-}
+Index: src/main/java/ru/skypro/homework/entity/User.java
+===================================================================
+diff --git a/src/main/java/ru/skypro/homework/entity/User.java b/src/main/java/ru/skypro/homework/entity/User.java
+deleted file mode 100644
+--- a/src/main/java/ru/skypro/homework/entity/User.java	(revision 8906745d7473b1a22d4ae7e5ca7775a6fe48e369)
++++ /dev/null	(revision 8906745d7473b1a22d4ae7e5ca7775a6fe48e369)
+@@ -1,80 +0,0 @@
+-package ru.skypro.homework.entity;
+-
+-import lombok.Data;
+-import lombok.EqualsAndHashCode;
+-import lombok.NoArgsConstructor;
+-import ru.skypro.homework.dto.Role;
+-
+-import javax.persistence.*;
+-import java.util.Collection;
+-
+-@Entity
+-@Data
+-@EqualsAndHashCode
+-@NoArgsConstructor
+-@Table(name = "users")
+-public class User {
+-
+-    /**
+-     * Id пользователя
+-     */
+-    @Id
+-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+-    @Column(name = "id")
+-    private Integer id;
+-
+-    /**
+-     * Логин пользователя
+-     */
+-    @Column(name = "username")
+-    private String username;
+-
+-    /**
+-     * Пароль пользователя
+-     */
+-    @Column(name = "password")
+-    private String password;
+-
+-    /**
+-     * Имя пользователя
+-     */
+-    @Column(name = "first_name")
+-    private String firstName;
+-
+-    /**
+-     * Фамилия пользователя
+-     */
+-    @Column(name = "last_name")
+-    private String lastName;
+-
+-    /**
+-     * Mail пользователя
+-     */
+-    @Column(name = "email", nullable = false, unique = true)
+-    private String email;
+-
+-    /**
+-     * Телефон пользователя
+-     */
+-    @Column(name = "phone", length = 11)
+-    private String phone;
+-
+-    /**
+-     * Роль пользователя
+-     */
+-    @Column(name = "user_role", nullable = false)
+-    @Enumerated(EnumType.STRING)
+-    private Role role;
+-
+-    /**
+-     * Фото пользователя
+-     */
+-    @Column(name = "image")
+-    private String image;
+-
+-    /**
+-     * Объявления пользователя
+-     */
+-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+-    private Collection<Ads> ads;
+-}
+Index: src/main/resources/liquibase/database.sql
+===================================================================
+diff --git a/src/main/resources/liquibase/database.sql b/src/main/resources/liquibase/database.sql
+deleted file mode 100644
+--- a/src/main/resources/liquibase/database.sql	(revision 8906745d7473b1a22d4ae7e5ca7775a6fe48e369)
++++ /dev/null	(revision 8906745d7473b1a22d4ae7e5ca7775a6fe48e369)
+@@ -1,33 +0,0 @@
+-CREATE TABLE users
+-(
+-    id         SERIAL primary key,
+-    username   TEXT,
+-    email      TEXT,
+-    password   TEXT,
+-    first_name TEXT,
+-    last_name  TEXT,
+-    phone      TEXT,
+-    image      TEXT,
+-    user_role  VARCHAR
+-);
+-
+-
+-CREATE TABLE ads
+-(
+-    id          SERIAL primary key,
+-    user_id     int REFERENCES users (id),
+-    price       int,
+-    title       text,
+-    image_path  text,
+-    description text
+-);
+-
+-
+-CREATE TABLE comments
+-(
+-    id        SERIAL primary key,
+-    user_id   int,
+-    ads_id    int,
+-    text      text,
+-    create_at timestamp
+-);
+\ No newline at end of file
+Index: src/main/java/ru/skypro/homework/entity/Images.java
+===================================================================
+diff --git a/src/main/java/ru/skypro/homework/entity/Images.java b/src/main/java/ru/skypro/homework/entity/Images.java
+deleted file mode 100644
+--- a/src/main/java/ru/skypro/homework/entity/Images.java	(revision 8906745d7473b1a22d4ae7e5ca7775a6fe48e369)
++++ /dev/null	(revision 8906745d7473b1a22d4ae7e5ca7775a6fe48e369)
+@@ -1,21 +0,0 @@
+-package ru.skypro.homework.entity;
+-
+-import lombok.AllArgsConstructor;
+-import lombok.Data;
+-import lombok.NoArgsConstructor;
+-
+-@Data
+-@NoArgsConstructor
+-@AllArgsConstructor
+-public class Images {
+-
+-    /**
+-     * Id картинки
+-     */
+-    private String id;
+-
+-    /**
+-     * Размер картинки в байтах
+-     */
+-    private byte[] data;
+-}
