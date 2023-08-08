@@ -23,9 +23,11 @@ public class AuthController {
 
     private final AuthService authService;
 
+    /**
+     * Ендпоинт для аутентификации
+     */
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
-
         if (authService.login(loginDto.getUsername(), loginDto.getPassword())) {
             return ResponseEntity.ok().build();
         } else {
@@ -33,6 +35,9 @@ public class AuthController {
         }
     }
 
+    /**
+     * Ендпоинт для регистрации
+     */
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterDto registerDto) {
 
