@@ -3,7 +3,7 @@ package ru.skypro.homework.entity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import ru.skypro.homework.dto.Role;
+import ru.skypro.homework.dto.RoleDto;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -64,7 +64,7 @@ public class User {
      */
     @Column(name = "user_role", nullable = false)
     @Enumerated(EnumType.STRING)
-    private Role role;
+    private RoleDto role;
 
     /**
      * Фото пользователя
