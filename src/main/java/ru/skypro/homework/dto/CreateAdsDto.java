@@ -26,8 +26,4 @@ public class CreateAdsDto {
     @NotNull
     private String title;
 
-    /**
-     * Id автора объявления
-     */
-    private Integer author;
 }

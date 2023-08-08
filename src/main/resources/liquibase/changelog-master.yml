@@ -1,3 +1,3 @@
 databaseChangeLog:
   - include:
-      file: liquibase/database.sql
+      file: liquibase/changes.sql

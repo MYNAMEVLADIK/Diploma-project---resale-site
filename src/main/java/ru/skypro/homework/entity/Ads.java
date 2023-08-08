@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
 
 @Entity
@@ -35,30 +36,35 @@ public class Ads {
      * Название объявления
      */
     @Column(name = "description")
+    @NotNull
     private String description;
 
     /**
      * Цена объявления
      */
     @Column(name = "price")
+    @NotNull
     private Integer price;
 
     /**
      * Описание объявления
      */
     @Column(name = "title")
+    @NotNull
     private String title;
 
     /**
      * Картинка объявления
      */
-    @Column(name = "image_path")
-    private String imagePath;
+    @Column(name = "image")
+    @NotNull
+    private String image;
 
     /**
      * Комментарии объявления
      */
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "ads"
             , cascade = CascadeType.ALL, orphanRemoval = true)
+    @NotNull
     private Collection<Comment> comments;
 }
