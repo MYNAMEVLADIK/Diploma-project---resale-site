@@ -13,6 +13,8 @@ import ru.skypro.homework.dto.RegisterDto;
 import ru.skypro.homework.dto.RoleDto;
 import ru.skypro.homework.service.AuthService;
 
+import static ru.skypro.homework.dto.RoleDto.USER;
+
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
@@ -21,23 +23,23 @@ public class AuthController {
 
     private final AuthService authService;
 
-    public AuthController(AuthService authService) {
-        this.authService = authService;
-    }
-
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginDto login) {
-        if (authService.login(login.getUsername(), login.getPassword())) {
+    public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
+
+        if (authService.login(loginDto.getUsername(), loginDto.getPassword())) {
             return ResponseEntity.ok().build();
         } else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
 
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody RegisterDto register, @RequestBody RoleDto roleDto) {
-        if (authService.register(register, roleDto)) {
-            return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<?> register(@RequestBody RegisterDto registerDto) {
+
+        RoleDto roleDto = registerDto.getRole() == null ? USER : registerDto.getRole();
+
+        if (authService.register(registerDto, roleDto)) {
+            return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
