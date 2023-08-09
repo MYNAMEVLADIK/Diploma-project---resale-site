@@ -38,8 +38,8 @@ public class AuthServiceImpl implements AuthService {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
 
-        UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
-        return encoder.matches(password, userDetails.getPassword());
+//        UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
+        return encoder.matches(password, user.getPassword());
     }
 
     @Override
