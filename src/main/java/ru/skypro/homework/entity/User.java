@@ -78,14 +78,12 @@ public class User {
      * Фото пользователя
      */
     @Column(name = "image")
-    @NotNull
     private String image;
 
     /**
      * Объявления пользователя
      */
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @NotNull
     private Collection<Ads> ads;
 }
 
