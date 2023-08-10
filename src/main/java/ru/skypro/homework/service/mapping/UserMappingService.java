@@ -3,6 +3,7 @@ package ru.skypro.homework.service.mapping;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.RegisterDto;
+import ru.skypro.homework.dto.RoleDto;
 import ru.skypro.homework.dto.UserDto;
 import ru.skypro.homework.entity.User;
 
@@ -19,7 +20,7 @@ public class UserMappingService {
         entity.setFirstName(dto.getFirstName());
         entity.setLastName(dto.getLastName());
         entity.setPhone(dto.getPhone());
-        entity.setRole(dto.getRole());
+        entity.setRole((dto.getRole() == null) ? RoleDto.USER : dto.getRole());
 
         return entity;
     }

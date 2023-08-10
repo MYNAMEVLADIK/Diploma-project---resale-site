@@ -31,7 +31,7 @@ public class AuthController {
         if (authService.login(loginDto.getUsername(), loginDto.getPassword())) {
             return ResponseEntity.ok().build();
         } else {
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 
@@ -44,7 +44,7 @@ public class AuthController {
         RoleDto roleDto = registerDto.getRole() == null ? USER : registerDto.getRole();
 
         if (authService.register(registerDto, roleDto)) {
-            return ResponseEntity.ok().build();
+            return ResponseEntity.status(HttpStatus.CREATED).build();
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }

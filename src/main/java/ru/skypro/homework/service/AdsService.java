@@ -6,6 +6,7 @@ import ru.skypro.homework.dto.AdsDto;
 import ru.skypro.homework.dto.CreateAdsDto;
 import ru.skypro.homework.dto.FullAdsDto;
 import ru.skypro.homework.dto.TotalNumberAds;
+import ru.skypro.homework.entity.User;
 
 public interface AdsService {
 
@@ -37,7 +38,7 @@ public interface AdsService {
     /**
      * Получить объявления авторизованного пользователя
      */
-    TotalNumberAds getAdsMe(String userDetails);
+    TotalNumberAds getAdsMe(User user);
 
     /**
      * Поиск объявлений по наименованию

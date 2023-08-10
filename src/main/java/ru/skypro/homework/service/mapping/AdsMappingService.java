@@ -7,6 +7,9 @@ import ru.skypro.homework.dto.CreateAdsDto;
 import ru.skypro.homework.entity.Ads;
 import ru.skypro.homework.entity.User;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @Slf4j
 public class AdsMappingService {
@@ -38,5 +41,17 @@ public class AdsMappingService {
         adsEntity.setUser(user);
 
         return adsEntity;
+    }
+
+    public List<AdsDto> mapToListAdsDto(List<Ads> ads) {
+        List<AdsDto> adsDtos = new ArrayList<>();
+
+        if (ads != null && !ads.isEmpty()) {
+            for (Ads ad : ads) {
+                adsDtos.add(mapToDto(ad));
+            }
+        }
+
+        return adsDtos;
     }
 }
