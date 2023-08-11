@@ -11,6 +11,7 @@ import ru.skypro.homework.entity.Ads;
 import ru.skypro.homework.entity.User;
 import ru.skypro.homework.repository.AdsRepository;
 import ru.skypro.homework.service.AdsService;
+import ru.skypro.homework.service.UserService;
 import ru.skypro.homework.service.mapping.AdsMappingService;
 
 import java.util.ArrayList;
@@ -22,6 +23,7 @@ public class AdsServiceImpl implements AdsService {
 
     private final AdsRepository adsRepository;
     private final AdsMappingService adsMappingService;
+    private final UserService userService;
 
     /**
      * Метод возвращает все объявления, которые есть в БД
@@ -41,7 +43,17 @@ public class AdsServiceImpl implements AdsService {
 
     @Override
     public AdsDto addAd(CreateAdsDto dto, MultipartFile image, String userDetails) {
-        return null;
+        if (dto == null) {
+            return null;
+        }
+
+        User user = userService.getAuthorizedUser();
+
+        Ads ad = adsMappingService.mapCreatedAdsToEntity(dto);
+        ad.setUser(user);
+        adsRepository.save(ad);
+
+        return adsMappingService.mapToDto(ad);
     }
 
     @Override

@@ -54,4 +54,17 @@ public class AdsMappingService {
 
         return adsDtos;
     }
+
+    public Ads mapCreatedAdsToEntity(CreateAdsDto dto) {
+        if (dto == null) {
+            return null;
+        }
+
+        Ads ad = new Ads();
+        ad.setDescription(dto.getDescription());
+        ad.setPrice(dto.getPrice());
+        ad.setTitle(dto.getTitle());
+
+        return ad;
+    }
 }

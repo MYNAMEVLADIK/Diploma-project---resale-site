@@ -57,7 +57,6 @@ public class Ads {
      * Картинка объявления
      */
     @Column(name = "image")
-    @NotNull
     private String image;
 
     /**
@@ -65,6 +64,5 @@ public class Ads {
      */
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "ads"
             , cascade = CascadeType.ALL, orphanRemoval = true)
-    @NotNull
     private Collection<Comment> comments;
 }
