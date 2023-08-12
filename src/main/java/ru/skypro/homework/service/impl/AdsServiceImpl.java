@@ -58,14 +58,26 @@ public class AdsServiceImpl implements AdsService {
 
     @Override
     public FullAdsDto getFullAdsById(Integer id) {
-        Ads ads = adsRepository.getReferenceById(id);
+        if (!adsRepository.existsById(id)) {
+            return null;
+        }
 
-        return adsMappingService.mapToFullAdsDto(ads);
+        Ads ad = adsRepository.getReferenceById(id);
+
+        return adsMappingService.mapToFullAdsDto(ad);
     }
 
     @Override
     public boolean deleteAdById(Integer id, String userDetails) {
-        return false;
+        User currentUser = userService.getAuthorizedUser();
+        Ads ad = adsRepository.getReferenceById(id);
+
+        if (!ad.getUser().equals(currentUser)) {
+            return false;
+        }
+
+        adsRepository.deleteById(id);
+        return true;
     }
 
     @Override
