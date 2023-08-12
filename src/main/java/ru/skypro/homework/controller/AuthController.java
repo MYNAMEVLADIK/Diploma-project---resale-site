@@ -8,9 +8,12 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import ru.skypro.homework.dto.Login;
-import ru.skypro.homework.dto.Register;
+import ru.skypro.homework.dto.LoginDto;
+import ru.skypro.homework.dto.RegisterDto;
+import ru.skypro.homework.dto.RoleDto;
 import ru.skypro.homework.service.AuthService;
+
+import static ru.skypro.homework.dto.RoleDto.USER;
 
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
@@ -20,18 +23,27 @@ public class AuthController {
 
     private final AuthService authService;
 
+    /**
+     * Ендпоинт для аутентификации
+     */
     @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Login login) {
-        if (authService.login(login.getUsername(), login.getPassword())) {
+    public ResponseEntity<?> login(@RequestBody LoginDto loginDto) {
+        if (authService.login(loginDto.getUsername(), loginDto.getPassword())) {
             return ResponseEntity.ok().build();
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
     }
 
+    /**
+     * Ендпоинт для регистрации
+     */
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody Register register) {
-        if (authService.register(register)) {
+    public ResponseEntity<?> register(@RequestBody RegisterDto registerDto) {
+
+        RoleDto roleDto = registerDto.getRole() == null ? USER : registerDto.getRole();
+
+        if (authService.register(registerDto, roleDto)) {
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
