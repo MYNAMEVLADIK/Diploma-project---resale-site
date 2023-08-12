@@ -58,7 +58,9 @@ public class AdsServiceImpl implements AdsService {
 
     @Override
     public FullAdsDto getFullAdsById(Integer id) {
-        return null;
+        Ads ads = adsRepository.getReferenceById(id);
+
+        return adsMappingService.mapToFullAdsDto(ads);
     }
 
     @Override

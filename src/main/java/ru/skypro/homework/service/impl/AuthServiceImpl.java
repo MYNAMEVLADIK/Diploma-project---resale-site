@@ -48,8 +48,18 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public boolean login(String userName, String password) {
 
-        if(!userDetailsManager.userExists(userName)) {
+        ru.skypro.homework.entity.User user = userRepository.findByUsername(userName);
+        if (user == null) {
             return false;
+        }
+
+        if (!userDetailsManager.userExists(userName)) {
+            userDetailsManager.createUser(
+                    User.builder()
+                            .password(user.getPassword())
+                            .username(user.getUsername())
+                            .roles(user.getRole().name())
+                            .build());
         }
 
         UserDetails userDetails = userDetailsManager.loadUserByUsername(userName);

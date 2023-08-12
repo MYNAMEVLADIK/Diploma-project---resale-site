@@ -1,5 +1,6 @@
 package ru.skypro.homework.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,7 @@ public class FullAdsDto {
     /**
      * Id объявления
      */
+    @JsonProperty("pk")
     private Integer idAds;
 
     /**
@@ -37,6 +39,7 @@ public class FullAdsDto {
     /**
      * Ссылка на картинку объявления
      */
+    @JsonProperty("image")
     private String imageAds;
 
     /**

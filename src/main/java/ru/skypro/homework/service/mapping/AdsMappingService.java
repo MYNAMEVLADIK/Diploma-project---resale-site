@@ -4,6 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.AdsDto;
 import ru.skypro.homework.dto.CreateAdsDto;
+import ru.skypro.homework.dto.FullAdsDto;
 import ru.skypro.homework.entity.Ads;
 import ru.skypro.homework.entity.User;
 
@@ -66,5 +67,24 @@ public class AdsMappingService {
         ad.setTitle(dto.getTitle());
 
         return ad;
+    }
+
+    public FullAdsDto mapToFullAdsDto(Ads ads) {
+        if (ads == null) {
+            return null;
+        }
+
+        FullAdsDto dto = new FullAdsDto();
+        dto.setIdAds(ads.getId());
+        dto.setAuthorFirstName(ads.getUser().getFirstName());
+        dto.setAuthorLastName(ads.getUser().getLastName());
+        dto.setDescription(ads.getDescription());
+        dto.setEmail(ads.getUser().getEmail());
+        dto.setImageAds(ads.getImage());
+        dto.setPhone(ads.getUser().getPhone());
+        dto.setPrice(ads.getPrice());
+        dto.setTitle(ads.getTitle());
+
+        return dto;
     }
 }

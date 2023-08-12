@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.AdsDto;
 import ru.skypro.homework.dto.CreateAdsDto;
+import ru.skypro.homework.dto.FullAdsDto;
 import ru.skypro.homework.dto.TotalNumberAds;
 import ru.skypro.homework.entity.User;
 import ru.skypro.homework.service.AdsService;
@@ -54,5 +55,19 @@ public class AdsController {
         }
 
         return ResponseEntity.ok(adsService.getAdsMe(currentUser));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<FullAdsDto> getAdsById(@PathVariable Integer id) {
+        if (userService.getAuthorizedUser() == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        FullAdsDto dto = adsService.getFullAdsById(id);
+        if (dto == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
+        return ResponseEntity.ok(dto);
     }
 }
