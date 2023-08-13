@@ -3,16 +3,15 @@ package ru.skypro.homework.service.impl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import ru.skypro.homework.dto.AdsDto;
-import ru.skypro.homework.dto.CreateAdsDto;
-import ru.skypro.homework.dto.FullAdsDto;
-import ru.skypro.homework.dto.TotalNumberAds;
+import ru.skypro.homework.dto.*;
 import ru.skypro.homework.entity.Ads;
+import ru.skypro.homework.entity.Comment;
 import ru.skypro.homework.entity.User;
 import ru.skypro.homework.repository.AdsRepository;
 import ru.skypro.homework.service.AdsService;
 import ru.skypro.homework.service.UserService;
 import ru.skypro.homework.service.mapping.AdsMappingService;
+import ru.skypro.homework.service.mapping.CommentMappingService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +23,7 @@ public class AdsServiceImpl implements AdsService {
     private final AdsRepository adsRepository;
     private final AdsMappingService adsMappingService;
     private final UserService userService;
+    private final CommentMappingService commentMappingService;
 
     /**
      * Метод возвращает все объявления, которые есть в БД
@@ -116,5 +116,17 @@ public class AdsServiceImpl implements AdsService {
     @Override
     public boolean updateAdImage(Integer id, MultipartFile image) {
         return false;
+    }
+
+    @Override
+    public TotalNumberComment getAllComments(Integer adId) {
+        Ads ad = adsRepository.getReferenceById(adId);
+
+        List<Comment> comments = (List<Comment>) ad.getComments();
+        if (comments == null) {
+            return new TotalNumberComment(0, new ArrayList<>());
+        }
+
+        return new TotalNumberComment(comments.size(), commentMappingService.mapToListDto(comments));
     }
 }

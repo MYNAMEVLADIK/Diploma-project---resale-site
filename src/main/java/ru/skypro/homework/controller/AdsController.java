@@ -7,10 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import ru.skypro.homework.dto.AdsDto;
-import ru.skypro.homework.dto.CreateAdsDto;
-import ru.skypro.homework.dto.FullAdsDto;
-import ru.skypro.homework.dto.TotalNumberAds;
+import ru.skypro.homework.dto.*;
 import ru.skypro.homework.entity.User;
 import ru.skypro.homework.service.AdsService;
 import ru.skypro.homework.service.UserService;
@@ -98,5 +95,14 @@ public class AdsController {
         }
 
         return ResponseEntity.ok(adsDto);
+    }
+
+    @GetMapping("/{id}/comments")
+    public ResponseEntity<TotalNumberComment> getComments(@PathVariable Integer id) {
+        if (userService.getAuthorizedUser() == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        return ResponseEntity.ok(adsService.getAllComments(id));
     }
 }
