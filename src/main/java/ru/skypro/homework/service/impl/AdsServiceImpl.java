@@ -82,7 +82,19 @@ public class AdsServiceImpl implements AdsService {
 
     @Override
     public AdsDto updateAdsById(Integer id, CreateAdsDto dto, String userDetails) {
-        return null;
+        User currentUser = userService.getAuthorizedUser();
+        Ads ad = adsRepository.getReferenceById(id);
+        if (!currentUser.equals(ad.getUser())) {
+            return null;
+        }
+
+        ad.setTitle(dto.getTitle());
+        ad.setPrice(dto.getPrice());
+        ad.setDescription(dto.getDescription());
+
+        adsRepository.save(ad);
+
+        return adsMappingService.mapToDto(ad);
     }
 
     /**

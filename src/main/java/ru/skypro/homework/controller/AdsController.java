@@ -83,4 +83,20 @@ public class AdsController {
 
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<AdsDto> updateAd(@PathVariable Integer id,
+                                           @RequestBody CreateAdsDto dto) {
+
+        if (userService.getAuthorizedUser() == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        AdsDto adsDto = adsService.updateAdsById(id, dto, "");
+        if (adsDto == null) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        return ResponseEntity.ok(adsDto);
+    }
 }
