@@ -1,5 +1,6 @@
 package ru.skypro.homework.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,16 +26,18 @@ public class CommentDto {
     /**
      * Cсылка на аватар пользователя
      */
+    @JsonProperty("authorImage")
     private String imageUser;
 
     /**
      * Дата и время создания комментария
      */
-    private LocalDateTime createdAt;
+    private Long createdAt;
 
     /**
      * id комментария
      */
+    @JsonProperty("pk")
     private Integer idCom;
 
     /**

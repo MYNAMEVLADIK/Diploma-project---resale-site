@@ -4,10 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import ru.skypro.homework.dto.UpdateUserDto;
 import ru.skypro.homework.dto.UserDto;
 import ru.skypro.homework.entity.User;
 import ru.skypro.homework.service.UserService;
@@ -35,5 +33,14 @@ public class UserController {
         }
 
         return ResponseEntity.ok(userMappingService.mapToDto(user));
+    }
+
+    @PatchMapping("/me")
+    public ResponseEntity<UpdateUserDto> updateUser(@RequestBody UpdateUserDto dto) {
+        if (userService.getAuthorizedUser() == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        return ResponseEntity.ok(userService.updateUser(dto));
     }
 }

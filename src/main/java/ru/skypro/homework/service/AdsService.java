@@ -2,10 +2,7 @@ package ru.skypro.homework.service;
 
 
 import org.springframework.web.multipart.MultipartFile;
-import ru.skypro.homework.dto.AdsDto;
-import ru.skypro.homework.dto.CreateAdsDto;
-import ru.skypro.homework.dto.FullAdsDto;
-import ru.skypro.homework.dto.TotalNumberAds;
+import ru.skypro.homework.dto.*;
 import ru.skypro.homework.entity.User;
 
 public interface AdsService {
@@ -49,4 +46,6 @@ public interface AdsService {
      * Изменить картинку объявления по его id
      */
     boolean updateAdImage(Integer id, MultipartFile image);
+
+    TotalNumberComment getAllComments(Integer adId);
 }
