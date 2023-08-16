@@ -97,12 +97,12 @@ public class AdsController {
         return ResponseEntity.ok(adsDto);
     }
 
-    @GetMapping("/{id}/comments")
-    public ResponseEntity<TotalNumberComment> getComments(@PathVariable Integer id) {
-        if (userService.getAuthorizedUser() == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        return ResponseEntity.ok(adsService.getAllComments(id));
-    }
+//    @GetMapping("/{id}/comments")
+//    public ResponseEntity<TotalNumberComment> getComments(@PathVariable Integer id) {
+//        if (userService.getAuthorizedUser() == null) {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+//        }
+//
+//        return ResponseEntity.ok(adsService.getAllComments(id));
+//    }
 }

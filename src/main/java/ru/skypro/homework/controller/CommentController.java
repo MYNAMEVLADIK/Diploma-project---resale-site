@@ -16,7 +16,7 @@ import java.security.Principal;
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/comment")
+@RequestMapping("/ads")
 public class CommentController {
 
     private final CommentService commentService;

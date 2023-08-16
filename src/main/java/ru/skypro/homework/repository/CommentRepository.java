@@ -12,27 +12,27 @@ import java.util.List;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
 
-    /**
-     * Изменить комментарий
-     */
-    @Modifying
-    @Query("UPDATE Comment c SET " +
-            "c.author.id = :authorId, " +
-            "c.author.image = :authorImage, " +
-            "c.author.firstName = :firstName, " +
-            "c.createdAt = :create_at, " +
-            "c.text = :text " +
-            "WHERE c.id = :comment_id")
-    Comment updateCommentById(
-            @Param("create_at") Integer createdAt,
-            @Param("firstName") String firstName,
-            @Param("authorImage") String authorImage,
-            @Param("authorId") Integer authorId,
-            @Param("text") String text,
-            @Param("comment_id") Integer commentId);
-
-    /**
-     * Поиск комментария по id объявления
-     */
-    List<Comment> findByAdId(Integer id);
+//    /**
+//     * Изменить комментарий
+//     */
+//    @Modifying
+//    @Query("UPDATE Comment c SET " +
+//            "c.author.id = :authorId, " +
+//            "c.author.image = :authorImage, " +
+//            "c.author.firstName = :firstName, " +
+//            "c.createdAt = :create_at, " +
+//            "c.text = :text " +
+//            "WHERE c.id = :comment_id")
+//    Comment updateCommentById(
+//            @Param("create_at") Integer createdAt,
+//            @Param("firstName") String firstName,
+//            @Param("authorImage") String authorImage,
+//            @Param("authorId") Integer authorId,
+//            @Param("text") String text,
+//            @Param("comment_id") Integer commentId);
+//
+//    /**
+//     * Поиск комментария по id объявления
+//     */
+//    List<Comment> findByAds_Id(Integer id);
 }

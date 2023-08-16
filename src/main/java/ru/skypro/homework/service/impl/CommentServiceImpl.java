@@ -98,13 +98,28 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public TotalNumberComment getComments(Integer id) {
 
-        List<Comment> commentsEntity = commentRepository.findByAdId(id);
-        List<CommentDto> dto = new ArrayList<>();
+//        List<Comment> commentsEntity = commentRepository.findByAds_Id(id);
+//        List<CommentDto> dto = new ArrayList<>();
+//
+//        for (Comment comment : commentsEntity) {
+//            dto.add(comments.mapToDto(comment));
+//        }
+//
+//        return new TotalNumberComment(dto.size(), dto);
 
-        for (Comment comment : commentsEntity) {
-            dto.add(comments.mapToDto(comment));
+        Ads ad = adsRepository.findById(id)
+                .orElseThrow(() -> new NotFoundEntityException("Сущность не найдена!"));
+
+        List<Comment> comments = (List<Comment>) ad.getComments();
+        if (comments == null || comments.isEmpty()) {
+            return new TotalNumberComment(0, new ArrayList<>());
         }
 
-        return new TotalNumberComment(dto.size(), dto);
+        List<CommentDto> dtoList = new ArrayList<>();
+        for (Comment comment : comments) {
+            dtoList.add(this.comments.mapToDto(comment));
+        }
+
+        return new TotalNumberComment(dtoList.size(), dtoList);
     }
 }
