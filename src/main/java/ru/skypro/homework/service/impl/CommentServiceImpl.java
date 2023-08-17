@@ -17,7 +17,6 @@ import ru.skypro.homework.repository.AdsRepository;
 import ru.skypro.homework.repository.CommentRepository;
 import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.CommentService;
-import ru.skypro.homework.service.ValidationService;
 import ru.skypro.homework.service.mapping.CommentMappingService;
 import ru.skypro.homework.service.mapping.CreateCommentMappingService;
 
@@ -29,7 +28,6 @@ import java.util.List;
 @AllArgsConstructor
 public class CommentServiceImpl implements CommentService {
 
-    private final ValidationService validationService;
     private final CommentRepository commentRepository;
     private final AdsRepository adsRepository;
     private final CreateCommentMappingService createComments;
@@ -39,9 +37,6 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public CommentDto saveComment(Integer id, CreateCommentDto dto, String userDetails) {
 
-        if (!validationService.validate(dto)) {
-            throw new ValidationException(dto.toString());
-        }
         User user = userRepository.findByUsername(userDetails);
         if (user == null) {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);

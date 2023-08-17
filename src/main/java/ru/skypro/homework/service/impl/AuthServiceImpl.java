@@ -14,7 +14,6 @@ import ru.skypro.homework.dto.RegisterDto;
 import ru.skypro.homework.dto.RoleDto;
 import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.AuthService;
-import ru.skypro.homework.service.ValidationService;
 import ru.skypro.homework.service.mapping.UserMappingService;
 
 import javax.validation.ValidationException;
@@ -26,7 +25,6 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder encoder;
     private final UserMappingService userMappingService;
     private final UserRepository userRepository;
-    private final ValidationService validationService;
     private final UserDetailsService userDetailsService;
     private final UserDetailsManager userDetailsManager;
 

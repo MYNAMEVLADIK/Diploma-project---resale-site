@@ -13,7 +13,7 @@ public interface AdsRepository extends JpaRepository<Ads, Integer> {
  //   /**
  //    * Поиск объявления по названию
  //    */
- //   List<Ads> SearchRorAnAdByName(String description);
+ //   List<Ads> searchRorAnAdByName(String description);
 //
  //   /**
  //    * Поиск объявлений по пользователю

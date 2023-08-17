@@ -63,7 +63,7 @@ public class User {
     /**
      * Телефон пользователя
      */
-    @Column(name = "phone", length = 11)
+    @Column(name = "phone", length = 12)
     @NotNull
     private String phone;
 

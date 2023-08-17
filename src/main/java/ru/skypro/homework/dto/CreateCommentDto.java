@@ -1,9 +1,11 @@
 package ru.skypro.homework.dto;
 
-import com.sun.istack.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Data
 @NoArgsConstructor
@@ -13,6 +15,7 @@ public class CreateCommentDto {
     /**
      * Текст комментария
      */
-    @NotNull
+    @NotBlank
+    @Size(max = 50)
     private String text;
 }

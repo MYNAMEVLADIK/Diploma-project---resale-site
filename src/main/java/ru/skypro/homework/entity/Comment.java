@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.Instant;
 
@@ -32,8 +33,8 @@ public class Comment {
     /**
      * Текст комментария
      */
-    @Column(name = "textt")
-    @NotNull
+    @Column(name = "textt", length = 50)
+    @NotBlank
     private String text;
 
     /**

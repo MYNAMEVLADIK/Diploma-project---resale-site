@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
 
@@ -35,8 +36,8 @@ public class Ads {
     /**
      * Название объявления
      */
-    @Column(name = "description")
-    @NotNull
+    @Column(name = "description", length = 50)
+    @NotBlank
     private String description;
 
     /**
@@ -49,8 +50,8 @@ public class Ads {
     /**
      * Описание объявления
      */
-    @Column(name = "title")
-    @NotNull
+    @Column(name = "title", length = 100)
+    @NotBlank
     private String title;
 
     /**
