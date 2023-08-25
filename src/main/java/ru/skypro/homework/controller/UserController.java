@@ -1,15 +1,21 @@
 package ru.skypro.homework.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.skypro.homework.dto.UpdateUserDto;
+import org.springframework.web.multipart.MultipartFile;
+import ru.skypro.homework.dto.NewPasswordDto;
 import ru.skypro.homework.dto.UserDto;
-import ru.skypro.homework.entity.User;
+import ru.skypro.homework.service.PictureService;
 import ru.skypro.homework.service.UserService;
-import ru.skypro.homework.service.mapping.UserMappingService;
+
+import java.security.Principal;
 
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
@@ -19,28 +25,74 @@ import ru.skypro.homework.service.mapping.UserMappingService;
 public class UserController {
 
     private final UserService userService;
-    private final UserMappingService userMappingService;
+    private final PictureService pictureService;
 
-    /**
-     * Возвращает информацию об авторизованном пользователе
-     */
-    @GetMapping("/me")
-    public ResponseEntity<UserDto> getUser() {
-        User user = userService.getAuthorizedUser();
+    @PostMapping("/set_password")
+    public ResponseEntity<?> setPassword(@RequestBody NewPasswordDto password,
+                                         Principal principal) {
 
-        if (user == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        if (userService.setPassword(password, principal.getName())) {
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
+    }
 
-        return ResponseEntity.ok(userMappingService.mapToDto(user));
+    @GetMapping("/me")
+    public ResponseEntity<UserDto> getUser(Principal principal) {
+
+        try {
+            UserDto user = userService.getUser(principal.getName());
+            return ResponseEntity.ok(user);
+        } catch (RuntimeException e) {
+            e.getStackTrace();
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
     }
 
     @PatchMapping("/me")
-    public ResponseEntity<UpdateUserDto> updateUser(@RequestBody UpdateUserDto dto) {
-        if (userService.getAuthorizedUser() == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto dto,
+                                              Principal principal) {
 
-        return ResponseEntity.ok(userService.updateUser(dto));
+        try {
+            UserDto userDto = userService.updateUser(dto, principal.getName());
+            return ResponseEntity.ok(userDto);
+        } catch (RuntimeException e) {
+            e.getStackTrace();
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
+
+    @PatchMapping(value = "/me/image", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<?> updateUserImage(@RequestPart(name = "image") MultipartFile image,
+                                             Principal principal) {
+
+        try {
+            return ResponseEntity.ok().body(userService.updateUserImage(principal.getName(), image));
+        } catch (RuntimeException e) {
+            e.getStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    @GetMapping(value = "/image/{id}", produces = {
+            MediaType.IMAGE_PNG_VALUE,
+            MediaType.IMAGE_JPEG_VALUE,
+            MediaType.APPLICATION_OCTET_STREAM_VALUE,
+            MediaType.IMAGE_GIF_VALUE
+    })
+    @Operation(summary = "Получить аватар пользователя",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "OK"),
+                    @ApiResponse(responseCode = "404", description = "Not found", content = @Content())
+            })
+    public ResponseEntity<byte[]> getImage(@PathVariable("id") String id) {
+
+        try {
+            return ResponseEntity.ok(pictureService.loadImage(id));
+        } catch (RuntimeException e) {
+            e.getStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 }

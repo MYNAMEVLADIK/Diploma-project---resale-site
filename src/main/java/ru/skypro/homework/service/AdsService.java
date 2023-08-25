@@ -35,17 +35,15 @@ public interface AdsService {
     /**
      * Получить объявления авторизованного пользователя
      */
-    TotalNumberAds getAdsMe(User user);
+   TotalNumberAds getAdsMe(String userDetails);
 
     /**
-     * Поиск объявлений по наименованию
+     * Поиск объявлений по названию
      */
-    TotalNumberAds findByDescriptionAds(String description);
+   TotalNumberAds findByDescriptionAds(String name);
 
     /**
-     * Изменить картинку объявления по его id
+     * Изменить картинку объявления по его идентификатору
      */
     boolean updateAdImage(Integer id, MultipartFile image);
-
-    TotalNumberComment getAllComments(Integer adId);
 }

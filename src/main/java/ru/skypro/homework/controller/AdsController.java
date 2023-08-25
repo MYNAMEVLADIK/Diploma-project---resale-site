@@ -2,7 +2,6 @@ package ru.skypro.homework.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -12,9 +11,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
-import ru.skypro.homework.entity.User;
 import ru.skypro.homework.service.AdsService;
-import ru.skypro.homework.service.UserService;
+import ru.skypro.homework.service.PictureService;
+
+import java.security.Principal;
 
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
@@ -23,89 +23,138 @@ import ru.skypro.homework.service.UserService;
 @RequestMapping("/ads")
 public class AdsController {
 
-    private final AdsService adsService;
-    private final UserService userService;
 
-    /**
-     * Возвращает абсолютно все объявления от всех пользователей
-     */
+    private final AdsService adsService;
+    private final PictureService pictureService;
+
     @GetMapping
     public ResponseEntity<TotalNumberAds> getAllAds() {
-        return ResponseEntity.ok(adsService.getAllAds());
+
+        try {
+            TotalNumberAds ads = adsService.getAllAds();
+            return ResponseEntity.ok(ads);
+
+        } catch (RuntimeException e) {
+            e.getStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<AdsDto> addAd(@RequestPart("properties") CreateAdsDto ad,
-                                        @RequestPart MultipartFile image) {
+    public ResponseEntity<AdsDto> addAds(@RequestPart CreateAdsDto properties,
+                                        @RequestPart(name = "image") MultipartFile image,
+                                        Principal principal) {
 
-        if (userService.getAuthorizedUser() == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        try {
+            AdsDto adsDto = adsService.addAd(properties, image, principal.getName());
+            return ResponseEntity.ok(adsDto);
+
+        } catch (RuntimeException e) {
+            e.getStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        return ResponseEntity.status(HttpStatus.CREATED).body(adsService.addAd(ad, image, ""));
-    }
-
-    /**
-     * Возвращает все объявления авторизованного пользователя
-     */
-    @GetMapping("/me")
-    public ResponseEntity<TotalNumberAds> getMyAds() {
-        User currentUser = userService.getAuthorizedUser();
-        if (currentUser == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        return ResponseEntity.ok(adsService.getAdsMe(currentUser));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<FullAdsDto> getAdsById(@PathVariable Integer id) {
-        if (userService.getAuthorizedUser() == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+    public ResponseEntity<FullAdsDto> getAds(@PathVariable Integer id) {
 
-        FullAdsDto dto = adsService.getFullAdsById(id);
-        if (dto == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
-        }
+        try {
+            FullAdsDto dto = adsService.getFullAdsById(id);
+            return ResponseEntity.ok().body(dto);
 
-        return ResponseEntity.ok(dto);
+        } catch (RuntimeException e) {
+            e.getStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<HttpStatus> deleteAd(@PathVariable Integer id) {
-        if (userService.getAuthorizedUser() == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+    public ResponseEntity<?> removeAds(@PathVariable Integer id,
+                                      Principal principal) {
 
-        if (!adsService.deleteAdById(id, "")) {
+        try {
+            return ResponseEntity.ok().body(adsService.deleteAdById(id, principal.getName()));
+
+        } catch (RuntimeException e) {
+            e.getStackTrace();
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
-
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<AdsDto> updateAd(@PathVariable Integer id,
-                                           @RequestBody CreateAdsDto dto) {
+    public ResponseEntity<AdsDto> updateAds(@PathVariable Integer id,
+                                            @RequestBody CreateAdsDto ads,
+                                            Principal principal) {
 
-        if (userService.getAuthorizedUser() == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+        try {
+            AdsDto adsDto = adsService.updateAdsById(id, ads, principal.getName());
+            return ResponseEntity.ok(adsDto);
 
-        AdsDto adsDto = adsService.updateAdsById(id, dto, "");
-        if (adsDto == null) {
+        } catch (RuntimeException e) {
+            e.getStackTrace();
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
+    }
 
-        return ResponseEntity.ok(adsDto);
+    @GetMapping("/me")
+    public ResponseEntity<TotalNumberAds> getAdsMe(Principal principal) {
+
+        try {
+            TotalNumberAds dto = adsService.getAdsMe(principal.getName());
+            return ResponseEntity.ok(dto);
+
+        } catch (RuntimeException e) {
+            e.getStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    @PatchMapping(value = "/{id}/image", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    public ResponseEntity<?> updateAdsImage(@PathVariable Integer id,
+                                           @RequestPart MultipartFile image) {
+
+        try {
+            return ResponseEntity.ok().body(adsService.updateAdImage(id, image));
+        } catch (RuntimeException e) {
+            e.getStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 
     @GetMapping("/found_ads")
-    public ResponseEntity<TotalNumberAds> findByDescriptionAds(@RequestParam String name) {
+    public ResponseEntity<TotalNumberAds> findByDescriptionAd(@RequestParam String name) {
+
+        try {
             TotalNumberAds dto = adsService.findByDescriptionAds(name);
-            if (dto == null) {
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-            }
             return ResponseEntity.ok().body(dto);
+
+        } catch (RuntimeException e) {
+            e.getStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+    }
+
+    @GetMapping(value = "/image/{id}", produces = {
+            MediaType.IMAGE_PNG_VALUE,
+            MediaType.IMAGE_JPEG_VALUE,
+            MediaType.APPLICATION_OCTET_STREAM_VALUE
+    })
+    @Operation(
+            summary = "Получить картинку объявления",
+            tags = "Объявления",
+            responses = {
+                    @ApiResponse(responseCode = "200", description = "OK"),
+                    @ApiResponse(responseCode = "404", description = "Not found", content = @Content())
+            })
+
+    public ResponseEntity<byte[]> getImage(@PathVariable("id") String id) {
+
+        try {
+            return ResponseEntity.ok(pictureService.loadImageFail(id));
+
+        } catch (RuntimeException e) {
+            e.getStackTrace();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
     }
 }

@@ -1,17 +1,21 @@
 package ru.skypro.homework.service.impl;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 import ru.skypro.homework.dto.*;
 import ru.skypro.homework.entity.Ads;
-import ru.skypro.homework.entity.Comment;
 import ru.skypro.homework.entity.User;
+import ru.skypro.homework.exceptions.NotFoundEntityException;
 import ru.skypro.homework.repository.AdsRepository;
+import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.AdsService;
-import ru.skypro.homework.service.UserService;
+import ru.skypro.homework.service.PictureService;
 import ru.skypro.homework.service.mapping.AdsMappingService;
-import ru.skypro.homework.service.mapping.CommentMappingService;
+import ru.skypro.homework.service.mapping.FullAdsMappingService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,98 +26,118 @@ import java.util.stream.Collectors;
 public class AdsServiceImpl implements AdsService {
 
     private final AdsRepository adsRepository;
-    private final AdsMappingService adsMappingService;
-    private final UserService userService;
-    private final CommentMappingService commentMappingService;
+    private final UserRepository userRepository;
+    private final AdsMappingService adsMapping;
+    private final FullAdsMappingService fullAdsMapping;
+    private final PictureService pictureService;
 
-
-    /**
-     * Метод возвращает все объявления, которые есть в БД
-     */
     @Override
     public TotalNumberAds getAllAds() {
-        List<Ads> ads = adsRepository.findAll();
 
-        if (ads.isEmpty()) {
-            return new TotalNumberAds(0, new ArrayList<>());
-        }
-
-        List<AdsDto> adsDto = adsMappingService.mapToListAdsDto(ads);
+        List<AdsDto> adsDto = adsRepository.findAll().stream()
+                .map(adsMapping::mapToDto)
+                .collect(Collectors.toList());
 
         return new TotalNumberAds(adsDto.size(), adsDto);
     }
 
     @Override
     public AdsDto addAd(CreateAdsDto dto, MultipartFile image, String userDetails) {
-        if (dto == null) {
-            return null;
+
+
+        User user = userRepository.findByUsername(userDetails);
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
 
-        User user = userService.getAuthorizedUser();
+        Ads entity = adsMapping.mapToEntity(dto, user);
+        String imageId = pictureService.addImage(image);
+        entity.setImage(imageId);
 
-        Ads ad = adsMappingService.mapCreatedAdsToEntity(dto);
-        ad.setUser(user);
-        adsRepository.save(ad);
+        adsRepository.save(entity);
 
-        return adsMappingService.mapToDto(ad);
+        AdsDto adsDto = adsMapping.mapToDto(entity);
+
+        return adsDto;
     }
 
     @Override
     public FullAdsDto getFullAdsById(Integer id) {
-        if (!adsRepository.existsById(id)) {
-            return null;
-        }
 
-        Ads ad = adsRepository.getReferenceById(id);
+        Ads entity = adsRepository.findById(id)
+                .orElseThrow(() -> new NotFoundEntityException("Сущность не найдена"));
 
-        return adsMappingService.mapToFullAdsDto(ad);
+        FullAdsDto dto = fullAdsMapping.mapToDto(entity);
+
+        return dto;
     }
 
     @Override
     public boolean deleteAdById(Integer id, String userDetails) {
-        User currentUser = userService.getAuthorizedUser();
-        Ads ad = adsRepository.getReferenceById(id);
 
-        if (!ad.getUser().equals(currentUser)) {
-            return false;
+        User authorOrAdmin = userRepository.findByUsername(userDetails);
+        Ads entity = adsRepository.findById(id)
+                .orElseThrow(() -> new NotFoundEntityException("Сущность не найдена"));
+
+        if (entity.getUser().getUsername().equals(userDetails)
+                || authorOrAdmin.getRole() == RoleDto.ADMIN) {
+
+            adsRepository.deleteById(id);
+            return true;
+        } else {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
-
-        adsRepository.deleteById(id);
-        return true;
     }
 
     @Override
+    @Transactional
     public AdsDto updateAdsById(Integer id, CreateAdsDto dto, String userDetails) {
-        User currentUser = userService.getAuthorizedUser();
-        Ads ad = adsRepository.getReferenceById(id);
-        if (!currentUser.equals(ad.getUser())) {
-            return null;
+
+        User authorOrAdmin = userRepository.findByUsername(userDetails);
+        Ads entity = adsRepository.findById(id)
+                .orElseThrow(() -> new NotFoundEntityException("Сущность не найдена"));
+
+        if (entity.getUser().getUsername().equals(userDetails)
+                || authorOrAdmin.getRole() == (RoleDto.ADMIN)) {
+
+            entity.setName(dto.getDescription());
+            entity.setPrice(dto.getPrice());
+            entity.setTitle(dto.getTitle());
+
+            adsRepository.save(entity);
+
+            AdsDto adsDto = adsMapping.mapToDto(entity);
+
+            return adsDto;
+
+        } else {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
         }
-
-        ad.setTitle(dto.getTitle());
-        ad.setPrice(dto.getPrice());
-        ad.setName(dto.getDescription());
-
-        adsRepository.save(ad);
-
-        return adsMappingService.mapToDto(ad);
-    }
-
-    /**
-     * Метод возвращает все объявления указанного пользователя
-     */
-    @Override
-    public TotalNumberAds getAdsMe(User user) {
-        List<AdsDto> adsDtos = adsMappingService.mapToListAdsDto((List<Ads>) user.getAds());
-
-        return new TotalNumberAds(adsDtos.size(), adsDtos);
     }
 
     @Override
-    public TotalNumberAds findByDescriptionAds(String name) {
+    public TotalNumberAds getAdsMe(String userDetails) {
+
+        User author = userRepository.findByUsername(userDetails);
+        if (author != null) {
+            List<Ads> adEntity = adsRepository.findByUser(author);
+            List<AdsDto> dto = new ArrayList<>();
+
+            for (Ads ads : adEntity) {
+                dto.add(adsMapping.mapToDto(ads));
+            }
+            return new TotalNumberAds(dto.size(), dto);
+        } else {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+        }
+    }
+
+    @Override
+    public TotalNumberAds findByDescriptionAds(String description) {
+
         List<AdsDto> dto = adsRepository
-                .searchRorAnAdByName(name).stream()
-                .map(adsMappingService::mapToDto)
+                .searchRorAnAdByName(description).stream()
+                .map(adsMapping::mapToDto)
                 .collect(Collectors.toList());
 
         return new TotalNumberAds(dto.size(), dto);
@@ -121,18 +145,14 @@ public class AdsServiceImpl implements AdsService {
 
     @Override
     public boolean updateAdImage(Integer id, MultipartFile image) {
-        return false;
-    }
 
-    @Override
-    public TotalNumberComment getAllComments(Integer adId) {
-        Ads ad = adsRepository.getReferenceById(adId);
+        String imageId = pictureService.addImage(image);
+        Ads entity = adsRepository.findById(id)
+                .orElseThrow(() -> new NotFoundEntityException("Сущность не найдена"));
 
-        List<Comment> comments = (List<Comment>) ad.getComments();
-        if (comments == null) {
-            return new TotalNumberComment(0, new ArrayList<>());
-        }
+        entity.setImage(imageId);
+        adsRepository.save(entity);
 
-        return new TotalNumberComment(comments.size(), commentMappingService.mapToListDto(comments));
+        return true;
     }
 }
