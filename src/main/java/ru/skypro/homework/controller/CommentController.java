@@ -25,52 +25,39 @@ public class CommentController {
     public ResponseEntity<CommentDto> addComment(@PathVariable("id") Integer id,
                                                  @RequestBody CreateCommentDto comments,
                                                  Principal principal) {
-
-        try {
-            CommentDto comment = commentService.saveComment(id, comments, principal.getName());
-            return ResponseEntity.ok(comment);
-        } catch (RuntimeException e) {
-            e.getStackTrace();
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        CommentDto comment = commentService.saveComment(id, comments, principal.getName());
+        if (comment == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+        return ResponseEntity.ok(comment);
     }
 
     @GetMapping("/{id}/comments")
     public ResponseEntity<TotalNumberComment> getComments(@PathVariable("id") Integer id) {
-
-        try {
-            TotalNumberComment commentDto = commentService.getComments(id);
-            return ResponseEntity.ok(commentDto);
-        } catch (RuntimeException e) {
-            e.getStackTrace();
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        TotalNumberComment commentDto = commentService.getComments(id);
+        if (commentDto == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+        return ResponseEntity.ok(commentDto);
     }
 
     @DeleteMapping("/{adId}/comments/{commentId}")
     public ResponseEntity<?> deleteComment(@PathVariable Integer adId,
                                            @PathVariable Integer commentId,
                                            Principal principal) {
-        try {
-            return ResponseEntity.ok(commentService.deleteComment(adId, commentId, principal.getName()));
-        } catch (RuntimeException e) {
-            e.getStackTrace();
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
+        return ResponseEntity.ok(commentService.deleteComment(adId, commentId, principal.getName()));
     }
+
 
     @PatchMapping("{adId}/comments/{commentId}")
     public ResponseEntity<CommentDto> updateComment(@PathVariable Integer adId,
                                                     @PathVariable Integer commentId,
                                                     @RequestBody CommentDto comment,
                                                     Principal principal) {
-
-        try {
-            CommentDto commentDto = commentService.updateComment(adId, commentId, comment, principal.getName());
-            return ResponseEntity.ok(commentDto);
-        } catch (RuntimeException e) {
-            e.getStackTrace();
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        CommentDto commentDto = commentService.updateComment(adId, commentId, comment, principal.getName());
+        if (commentDto == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+        return ResponseEntity.ok(commentDto);
     }
 }

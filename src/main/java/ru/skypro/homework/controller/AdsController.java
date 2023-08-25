@@ -1,5 +1,9 @@
 package ru.skypro.homework.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -27,7 +31,6 @@ public class AdsController {
      */
     @GetMapping
     public ResponseEntity<TotalNumberAds> getAllAds() {
-
         return ResponseEntity.ok(adsService.getAllAds());
     }
 
@@ -97,12 +100,12 @@ public class AdsController {
         return ResponseEntity.ok(adsDto);
     }
 
-//    @GetMapping("/{id}/comments")
-//    public ResponseEntity<TotalNumberComment> getComments(@PathVariable Integer id) {
-//        if (userService.getAuthorizedUser() == null) {
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-//        }
-//
-//        return ResponseEntity.ok(adsService.getAllComments(id));
-//    }
+    @GetMapping("/found_ads")
+    public ResponseEntity<TotalNumberAds> findByDescriptionAds(@RequestParam String name) {
+            TotalNumberAds dto = adsService.findByDescriptionAds(name);
+            if (dto == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
+            return ResponseEntity.ok().body(dto);
+    }
 }

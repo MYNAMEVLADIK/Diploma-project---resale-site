@@ -15,6 +15,7 @@ import ru.skypro.homework.service.mapping.CommentMappingService;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +25,7 @@ public class AdsServiceImpl implements AdsService {
     private final AdsMappingService adsMappingService;
     private final UserService userService;
     private final CommentMappingService commentMappingService;
+
 
     /**
      * Метод возвращает все объявления, которые есть в БД
@@ -90,7 +92,7 @@ public class AdsServiceImpl implements AdsService {
 
         ad.setTitle(dto.getTitle());
         ad.setPrice(dto.getPrice());
-        ad.setDescription(dto.getDescription());
+        ad.setName(dto.getDescription());
 
         adsRepository.save(ad);
 
@@ -99,7 +101,6 @@ public class AdsServiceImpl implements AdsService {
 
     /**
      * Метод возвращает все объявления указанного пользователя
-     * @param user - пользователь
      */
     @Override
     public TotalNumberAds getAdsMe(User user) {
@@ -109,8 +110,13 @@ public class AdsServiceImpl implements AdsService {
     }
 
     @Override
-    public TotalNumberAds findByDescriptionAd(String description) {
-        return null;
+    public TotalNumberAds findByDescriptionAds(String name) {
+        List<AdsDto> dto = adsRepository
+                .searchRorAnAdByName(name).stream()
+                .map(adsMappingService::mapToDto)
+                .collect(Collectors.toList());
+
+        return new TotalNumberAds(dto.size(), dto);
     }
 
     @Override

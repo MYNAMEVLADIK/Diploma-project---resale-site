@@ -40,7 +40,7 @@ public interface AdsService {
     /**
      * Поиск объявлений по наименованию
      */
-    TotalNumberAds findByDescriptionAd(String description);
+    TotalNumberAds findByDescriptionAds(String description);
 
     /**
      * Изменить картинку объявления по его id

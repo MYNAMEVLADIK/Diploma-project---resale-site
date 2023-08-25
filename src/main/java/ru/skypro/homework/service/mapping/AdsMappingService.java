@@ -36,7 +36,7 @@ public class AdsMappingService {
     public Ads mapToEntity(CreateAdsDto dto, User user) {
 
         Ads adsEntity = new Ads();
-        adsEntity.setDescription(dto.getDescription());
+        adsEntity.setName(dto.getDescription());
         adsEntity.setTitle(dto.getTitle());
         adsEntity.setPrice(dto.getPrice());
         adsEntity.setUser(user);
@@ -62,7 +62,7 @@ public class AdsMappingService {
         }
 
         Ads ad = new Ads();
-        ad.setDescription(dto.getDescription());
+        ad.setName(dto.getDescription());
         ad.setPrice(dto.getPrice());
         ad.setTitle(dto.getTitle());
 
@@ -78,7 +78,7 @@ public class AdsMappingService {
         dto.setIdAds(ads.getId());
         dto.setAuthorFirstName(ads.getUser().getFirstName());
         dto.setAuthorLastName(ads.getUser().getLastName());
-        dto.setDescription(ads.getDescription());
+        dto.setDescription(ads.getName());
         dto.setEmail(ads.getUser().getEmail());
         dto.setImageAds(ads.getImage());
         dto.setPhone(ads.getUser().getPhone());

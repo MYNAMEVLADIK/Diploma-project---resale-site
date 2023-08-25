@@ -38,7 +38,7 @@ public class Ads {
      */
     @Column(name = "description", length = 50)
     @NotBlank
-    private String description;
+    private String name;
 
     /**
      * Цена объявления

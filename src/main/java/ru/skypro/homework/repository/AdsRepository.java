@@ -10,11 +10,11 @@ import java.util.List;
 @Repository
 public interface AdsRepository extends JpaRepository<Ads, Integer> {
 
- //   /**
- //    * Поиск объявления по названию
- //    */
- //   List<Ads> searchRorAnAdByName(String description);
-//
+    /**
+     * Поиск объявления по названию
+     */
+    List<Ads> searchRorAnAdByName(String name);
+
  //   /**
  //    * Поиск объявлений по пользователю
  //    */
