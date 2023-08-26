@@ -52,15 +52,15 @@ public class CommentMappingService {
     }
 
     public List<CommentDto> mapToListDto(List<Comment> comments) {
-        List<CommentDto> dtos = new ArrayList<>();
+        List<CommentDto> dto = new ArrayList<>();
         if (comments == null || comments.isEmpty()) {
-            return dtos;
+            return dto;
         }
 
         for (Comment comment : comments) {
-            dtos.add(mapToDto(comment));
+            dto.add(mapToDto(comment));
         }
 
-        return dtos;
+        return dto;
     }
 }

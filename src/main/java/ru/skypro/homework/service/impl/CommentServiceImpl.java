@@ -20,7 +20,6 @@ import ru.skypro.homework.service.CommentService;
 import ru.skypro.homework.service.mapping.CommentMappingService;
 import ru.skypro.homework.service.mapping.CreateCommentMappingService;
 
-import javax.validation.ValidationException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -93,19 +92,10 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public TotalNumberComment getComments(Integer id) {
 
-//        List<Comment> commentsEntity = commentRepository.findByAds_Id(id);
-//        List<CommentDto> dto = new ArrayList<>();
-//
-//        for (Comment comment : commentsEntity) {
-//            dto.add(comments.mapToDto(comment));
-//        }
-//
-//        return new TotalNumberComment(dto.size(), dto);
-
-        Ads ad = adsRepository.findById(id)
+        Ads ads = adsRepository.findById(id)
                 .orElseThrow(() -> new NotFoundEntityException("Сущность не найдена!"));
 
-        List<Comment> comments = (List<Comment>) ad.getComments();
+        List<Comment> comments = (List<Comment>) ads.getComments();
         if (comments == null || comments.isEmpty()) {
             return new TotalNumberComment(0, new ArrayList<>());
         }

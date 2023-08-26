@@ -29,109 +29,66 @@ public class AdsController {
 
     @GetMapping
     public ResponseEntity<TotalNumberAds> getAllAds() {
-
-        try {
             TotalNumberAds ads = adsService.getAllAds();
+            if (ads == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
             return ResponseEntity.ok(ads);
-
-        } catch (RuntimeException e) {
-            e.getStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-    }
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<AdsDto> addAds(@RequestPart CreateAdsDto properties,
                                         @RequestPart(name = "image") MultipartFile image,
                                         Principal principal) {
-
-        try {
             AdsDto adsDto = adsService.addAd(properties, image, principal.getName());
             return ResponseEntity.ok(adsDto);
-
-        } catch (RuntimeException e) {
-            e.getStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<FullAdsDto> getAds(@PathVariable Integer id) {
-
-        try {
             FullAdsDto dto = adsService.getFullAdsById(id);
+            if (dto == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
             return ResponseEntity.ok().body(dto);
-
-        } catch (RuntimeException e) {
-            e.getStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> removeAds(@PathVariable Integer id,
                                       Principal principal) {
-
-        try {
             return ResponseEntity.ok().body(adsService.deleteAdById(id, principal.getName()));
-
-        } catch (RuntimeException e) {
-            e.getStackTrace();
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<AdsDto> updateAds(@PathVariable Integer id,
                                             @RequestBody CreateAdsDto ads,
                                             Principal principal) {
-
-        try {
             AdsDto adsDto = adsService.updateAdsById(id, ads, principal.getName());
             return ResponseEntity.ok(adsDto);
-
-        } catch (RuntimeException e) {
-            e.getStackTrace();
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
     }
 
     @GetMapping("/me")
     public ResponseEntity<TotalNumberAds> getAdsMe(Principal principal) {
-
-        try {
             TotalNumberAds dto = adsService.getAdsMe(principal.getName());
+            if (dto == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
             return ResponseEntity.ok(dto);
-
-        } catch (RuntimeException e) {
-            e.getStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
 
     @PatchMapping(value = "/{id}/image", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     public ResponseEntity<?> updateAdsImage(@PathVariable Integer id,
                                            @RequestPart MultipartFile image) {
-
-        try {
             return ResponseEntity.ok().body(adsService.updateAdImage(id, image));
-        } catch (RuntimeException e) {
-            e.getStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
 
     @GetMapping("/found_ads")
-    public ResponseEntity<TotalNumberAds> findByDescriptionAd(@RequestParam String name) {
-
-        try {
+    public ResponseEntity<TotalNumberAds> findByDescriptionAds(@RequestParam String name) {
             TotalNumberAds dto = adsService.findByDescriptionAds(name);
+            if (dto == null) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            }
             return ResponseEntity.ok().body(dto);
-
-        } catch (RuntimeException e) {
-            e.getStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
 
     @GetMapping(value = "/image/{id}", produces = {
@@ -148,13 +105,6 @@ public class AdsController {
             })
 
     public ResponseEntity<byte[]> getImage(@PathVariable("id") String id) {
-
-        try {
             return ResponseEntity.ok(pictureService.loadImageFail(id));
-
-        } catch (RuntimeException e) {
-            e.getStackTrace();
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
-        }
     }
 }

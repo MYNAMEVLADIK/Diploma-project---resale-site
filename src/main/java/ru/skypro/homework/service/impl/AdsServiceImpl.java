@@ -133,10 +133,10 @@ public class AdsServiceImpl implements AdsService {
     }
 
     @Override
-    public TotalNumberAds findByDescriptionAds(String description) {
+    public TotalNumberAds findByDescriptionAds(String name) {
 
         List<AdsDto> dto = adsRepository
-                .searchRorAnAdByName(description).stream()
+                .searchRorAnAdByName(name).stream()
                 .map(adsMapping::mapToDto)
                 .collect(Collectors.toList());
 
