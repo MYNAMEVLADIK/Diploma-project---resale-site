@@ -12,9 +12,11 @@ import ru.skypro.homework.dto.RoleDto;
 import ru.skypro.homework.entity.User;
 import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.AuthService;
-import ru.skypro.homework.service.mapping.UserMappingService;
+import ru.skypro.homework.mapping.UserMappingService;
 
-
+/**
+ * Класс - сервис, по работе с авторизацией и регистрацией
+ */
 @Service
 @AllArgsConstructor
 public class AuthServiceImpl implements AuthService {
@@ -24,6 +26,9 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final UserDetailsService userDetailsService;
 
+    /**
+     * Метод для входа в учетную запись
+     */
     @Override
     public boolean login(String userName, String password) {
 
@@ -39,6 +44,9 @@ public class AuthServiceImpl implements AuthService {
         return encoder.matches(password, userDetails.getPassword());
     }
 
+    /**
+     * Метод для создания учетной записи
+     */
     @Override
     public boolean register(RegisterDto registerReq, RoleDto role) {
 

@@ -1,4 +1,4 @@
-package ru.skypro.homework.service.mapping;
+package ru.skypro.homework.mapping;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -7,10 +7,16 @@ import ru.skypro.homework.dto.RoleDto;
 import ru.skypro.homework.dto.UserDto;
 import ru.skypro.homework.entity.User;
 
+/**
+ * Класс - маппинг пользователей
+ */
 @Service
 @Slf4j
 public class UserMappingService {
 
+    /**
+     * Метод для маппинга дто "Пользователи" в сущность
+     */
     public User mapToEntity(RegisterDto dto){
 
         User entity = new User();
@@ -25,6 +31,9 @@ public class UserMappingService {
         return entity;
     }
 
+    /**
+     * Метод для маппинга сущности "Пользователи" в дто
+     */
     public UserDto mapToDto(User entity) {
 
         UserDto dto = new UserDto();

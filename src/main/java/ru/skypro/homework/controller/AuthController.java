@@ -1,5 +1,6 @@
 package ru.skypro.homework.controller;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -15,10 +16,15 @@ import ru.skypro.homework.service.AuthService;
 
 import static ru.skypro.homework.dto.RoleDto.USER;
 
+/**
+ * Контроллер по работе с регистрацией и аутентификацией
+ */
 @Slf4j
 @CrossOrigin(value = "http://localhost:3000")
 @RestController
 @RequiredArgsConstructor
+@Tag(name = "Класс по работе с регистрацией и аутентификацией",
+        description = "CRUD-операции для работы с регистрацией и аутентификацией")
 public class AuthController {
 
     private final AuthService authService;

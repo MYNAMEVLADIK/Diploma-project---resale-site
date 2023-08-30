@@ -6,6 +6,9 @@ import ru.skypro.homework.dto.UpdateUserDto;
 import ru.skypro.homework.dto.UserDto;
 import ru.skypro.homework.entity.User;
 
+/**
+ * Интерфейс, по работе с пользователями
+ */
 public interface UserService {
 
     /**

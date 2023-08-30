@@ -13,7 +13,7 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Преобразование пользователя из БД в security пользователя
+ * Класс, отвечающий за преобразование пользователя из БД в security пользователя
  */
 @Service
 @RequiredArgsConstructor

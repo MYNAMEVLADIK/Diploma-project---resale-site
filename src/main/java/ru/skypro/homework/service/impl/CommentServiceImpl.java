@@ -17,22 +17,26 @@ import ru.skypro.homework.repository.AdsRepository;
 import ru.skypro.homework.repository.CommentRepository;
 import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.CommentService;
-import ru.skypro.homework.service.mapping.CommentMappingService;
-import ru.skypro.homework.service.mapping.CreateCommentMappingService;
+import ru.skypro.homework.mapping.CommentMappingService;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Класс - сервис, по работе с комментариями
+ */
 @Service
 @AllArgsConstructor
 public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
     private final AdsRepository adsRepository;
-    private final CreateCommentMappingService createComments;
     private final CommentMappingService comments;
     private final UserRepository userRepository;
 
+    /**
+     * Метод для добавления комментария
+     */
     @Override
     public CommentDto saveComment(Integer id, CreateCommentDto dto, String userDetails) {
 
@@ -43,12 +47,15 @@ public class CommentServiceImpl implements CommentService {
         Ads ad = adsRepository.findById(id)
                 .orElseThrow(() -> new NotFoundEntityException("Сущность не найдена!"));
 
-        Comment entity = createComments.mapToEntity(dto, user, ad);
+        Comment entity = comments.mapToEntity(dto, user, ad);
         commentRepository.save(entity);
 
         return comments.mapToDto(entity);
     }
 
+    /**
+     * Метод для изменения комментария
+     */
     @Override
     public CommentDto updateComment(Integer adId, Integer commentId, CommentDto dto, String userDetails) {
 
@@ -70,6 +77,9 @@ public class CommentServiceImpl implements CommentService {
         }
     }
 
+    /**
+     * Метод для удаления комментария
+     */
     @Override
     @Transactional
     public boolean deleteComment(Integer adId, Integer commentId, String userDetails) {
@@ -89,6 +99,9 @@ public class CommentServiceImpl implements CommentService {
         }
     }
 
+    /**
+     * Метод для получения комментария
+     */
     @Override
     public TotalNumberComment getComments(Integer id) {
 

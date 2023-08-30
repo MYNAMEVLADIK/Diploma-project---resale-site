@@ -2,6 +2,9 @@ package ru.skypro.homework.service;
 
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * Интерфейс, по работе с картинками
+ */
 public interface PictureService {
     /**
      * Загружаем новое изображение

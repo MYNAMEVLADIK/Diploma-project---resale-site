@@ -6,6 +6,9 @@ import ru.skypro.homework.entity.User;
 
 import java.util.Optional;
 
+/**
+ * Класс - репозиторий по работе с пользоватеями
+ */
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
 

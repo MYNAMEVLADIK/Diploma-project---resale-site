@@ -4,6 +4,9 @@ import ru.skypro.homework.dto.CommentDto;
 import ru.skypro.homework.dto.CreateCommentDto;
 import ru.skypro.homework.dto.TotalNumberComment;
 
+/**
+ * Интерфейс, по работе с комментариями
+ */
 public interface CommentService {
 
     /**

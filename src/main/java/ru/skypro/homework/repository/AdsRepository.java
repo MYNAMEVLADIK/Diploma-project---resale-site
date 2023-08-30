@@ -7,6 +7,9 @@ import ru.skypro.homework.entity.User;
 
 import java.util.List;
 
+/**
+ * Класс - репозиторий по работе с объявлениями
+ */
 @Repository
 public interface AdsRepository extends JpaRepository<Ads, Integer> {
 

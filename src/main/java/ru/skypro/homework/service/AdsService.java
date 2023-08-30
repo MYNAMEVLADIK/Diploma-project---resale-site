@@ -5,6 +5,9 @@ import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.*;
 import ru.skypro.homework.entity.User;
 
+/**
+ * Интерфейс, по работе с объявлениями
+ */
 public interface AdsService {
 
     /**

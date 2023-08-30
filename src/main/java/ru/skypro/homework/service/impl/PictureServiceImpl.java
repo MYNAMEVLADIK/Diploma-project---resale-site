@@ -18,6 +18,9 @@ import java.util.UUID;
 import static java.nio.file.Files.*;
 import static java.nio.file.Files.readAllBytes;
 
+/**
+ * Класс - сервис, по работе с картинками
+ */
 @Slf4j
 @Service
 @Transactional
@@ -26,6 +29,9 @@ public class PictureServiceImpl implements PictureService {
 
     private final String desktopPath = System.getProperty("user.dir") + File.separator + "images";
 
+    /**
+     * Метод для добавления картинки
+     */
     @Override
     public String addImage(MultipartFile image) {
 
@@ -42,6 +48,9 @@ public class PictureServiceImpl implements PictureService {
         return picture.getId();
     }
 
+    /**
+     * Метод для загрузки картинки
+     */
     @Override
     public byte[] loadImage(String fileName) {
 
@@ -64,6 +73,9 @@ public class PictureServiceImpl implements PictureService {
         return outputFileBytes;
     }
 
+    /**
+     * Метод для загрузки картинки
+     */
     @Override
     public byte[] loadImageFail(String fileName) {
 
@@ -79,6 +91,9 @@ public class PictureServiceImpl implements PictureService {
         return outputFileBytes;
     }
 
+    /**
+     * Метод для определения типа картинки
+     */
     private String type(MultipartFile image) {
 
         String type = image.getContentType();

@@ -14,13 +14,15 @@ import ru.skypro.homework.repository.AdsRepository;
 import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.AdsService;
 import ru.skypro.homework.service.PictureService;
-import ru.skypro.homework.service.mapping.AdsMappingService;
-import ru.skypro.homework.service.mapping.FullAdsMappingService;
+import ru.skypro.homework.mapping.AdsMappingService;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Класс - сервис, по работе с объявлениями
+ */
 @Service
 @RequiredArgsConstructor
 public class AdsServiceImpl implements AdsService {
@@ -28,9 +30,11 @@ public class AdsServiceImpl implements AdsService {
     private final AdsRepository adsRepository;
     private final UserRepository userRepository;
     private final AdsMappingService adsMapping;
-    private final FullAdsMappingService fullAdsMapping;
     private final PictureService pictureService;
 
+    /**
+     * Метод для получения всех объявлений
+     */
     @Override
     public TotalNumberAds getAllAds() {
 
@@ -41,6 +45,9 @@ public class AdsServiceImpl implements AdsService {
         return new TotalNumberAds(adsDto.size(), adsDto);
     }
 
+    /**
+     * Метод для добавления объявления
+     */
     @Override
     public AdsDto addAd(CreateAdsDto dto, MultipartFile image, String userDetails) {
 
@@ -61,17 +68,23 @@ public class AdsServiceImpl implements AdsService {
         return adsDto;
     }
 
+    /**
+     * Метод для получения полной информации объявления
+     */
     @Override
     public FullAdsDto getFullAdsById(Integer id) {
 
         Ads entity = adsRepository.findById(id)
                 .orElseThrow(() -> new NotFoundEntityException("Сущность не найдена"));
 
-        FullAdsDto dto = fullAdsMapping.mapToDto(entity);
+        FullAdsDto dto = adsMapping.mapToFullDto(entity);
 
         return dto;
     }
 
+    /**
+     * Метод для удаления объявления
+     */
     @Override
     public boolean deleteAdById(Integer id, String userDetails) {
 
@@ -89,6 +102,9 @@ public class AdsServiceImpl implements AdsService {
         }
     }
 
+    /**
+     * Метод для обновления информации объявления
+     */
     @Override
     @Transactional
     public AdsDto updateAdsById(Integer id, CreateAdsDto dto, String userDetails) {
@@ -115,6 +131,9 @@ public class AdsServiceImpl implements AdsService {
         }
     }
 
+    /**
+     * Метод для получения объявлений авторизованного пользователя
+     */
     @Override
     public TotalNumberAds getAdsMe(String userDetails) {
 
@@ -132,6 +151,9 @@ public class AdsServiceImpl implements AdsService {
         }
     }
 
+    /**
+     * Метод для поиска объявлений по названию
+     */
     @Override
     public TotalNumberAds findByDescriptionAds(String name) {
 
@@ -143,6 +165,9 @@ public class AdsServiceImpl implements AdsService {
         return new TotalNumberAds(dto.size(), dto);
     }
 
+    /**
+     * Метод для обновления картинки объявления
+     */
     @Override
     public boolean updateAdImage(Integer id, MultipartFile image) {
 

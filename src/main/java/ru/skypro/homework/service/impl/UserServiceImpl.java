@@ -14,8 +14,11 @@ import ru.skypro.homework.exceptions.NotFoundEntityException;
 import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.PictureService;
 import ru.skypro.homework.service.UserService;
-import ru.skypro.homework.service.mapping.UserMappingService;
+import ru.skypro.homework.mapping.UserMappingService;
 
+/**
+ * Класс - сервис, по работе с пользователями
+ */
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -25,6 +28,9 @@ public class UserServiceImpl implements UserService {
     private final UserMappingService userMapper;
     private final PasswordEncoder encoder;
 
+    /**
+     * Метод для обновления пароля пользователя
+     */
     @Override
     @Transactional
     public boolean setPassword(NewPasswordDto password, String username) {
@@ -42,9 +48,11 @@ public class UserServiceImpl implements UserService {
         } else {
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
-
     }
 
+    /**
+     * Метод для получения пользователя
+     */
     @Override
     public UserDto getUser(String username) {
 
@@ -57,6 +65,9 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    /**
+     * Метод для обновления данных о пользователе
+     */
     @Override
     @Transactional
     public UserDto updateUser(UserDto user, String username) {
@@ -75,6 +86,9 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    /**
+     * Метод для обновления аватара пользователя
+     */
     @Override
     public boolean updateUserImage(String username, MultipartFile image) {
 
