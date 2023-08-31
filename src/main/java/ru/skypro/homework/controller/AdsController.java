@@ -75,7 +75,7 @@ public class AdsController {
             tags = "Объявления"
     )
     public ResponseEntity<AdsDto> addAds(@RequestPart CreateAdsDto properties,
-                                         @RequestPart(name = "image") MultipartFile image,
+                                         @RequestPart (name = "image") MultipartFile image,
                                          Principal principal) {
         AdsDto adsDto = adsService.addAd(properties, image, principal.getName());
         return ResponseEntity.ok(adsDto);

@@ -127,7 +127,7 @@ public class AdsServiceImpl implements AdsService {
             return adsDto;
 
         } else {
-            throw new ResponseStatusException(HttpStatus.FORBIDDEN);
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "Вы не обладаете достаточными правами!");
         }
     }
 

@@ -34,6 +34,7 @@ public class UserController {
     private final UserService userService;
     private final PictureService pictureService;
 
+    @PatchMapping("/set_password")
     @Operation(
             summary = "Обновление пароля",
             responses = {
@@ -56,7 +57,7 @@ public class UserController {
             },
             tags = "Пользователи"
     )
-    public ResponseEntity<?> setPassword(@RequestBody NewPasswordDto password,
+    public ResponseEntity<?> setPassword(@RequestParam NewPasswordDto password,
                                          Principal principal) {
 
         if (userService.setPassword(password, principal.getName())) {

@@ -28,6 +28,6 @@ CREATE TABLE comments
     id        SERIAL primary key,
     user_id   int,
     ads_id    int,
-    textt      TEXT,
+    textt     TEXT,
     create_at timestamp
 );
