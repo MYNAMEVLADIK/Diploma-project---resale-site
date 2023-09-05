@@ -34,7 +34,7 @@ public class UserController {
 
     private final UserService userService;
     private final PictureService pictureService;
-
+    @PostMapping("/set_password")
     @Operation(
             summary = "Обновление пароля",
             responses = {

@@ -32,7 +32,7 @@ public class CommentDto {
     /**
      * Дата и время создания комментария
      */
-    private Long createdAt;
+    private LocalDateTime createdAt;
 
     /**
      * id комментария

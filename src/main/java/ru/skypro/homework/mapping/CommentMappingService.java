@@ -10,6 +10,8 @@ import ru.skypro.homework.entity.Comment;
 import ru.skypro.homework.entity.User;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.util.TimeZone;
 
 /**
  * Класс - маппинг комментариев
@@ -22,17 +24,24 @@ public class CommentMappingService {
     /**
      * Метод для маппинга сущности "Комментарии" в дто
      */
-    public CommentDto mapToDto(Comment comment) {
-        if (comment == null) {
-            return null;
-        }
+    public CommentDto mapToDto(Comment entity) {
+
+        TimeZone tz = TimeZone.getDefault();
+        LocalDateTime ldt = LocalDateTime.ofInstant(entity.getCreatedAt(), tz.toZoneId());
+
         CommentDto dto = new CommentDto();
-        dto.setAuthor(comment.getUser().getId());
-        dto.setAuthorFirstName(comment.getUser().getFirstName());
-        dto.setImageUser(comment.getUser().getImage());
-        dto.setCreatedAt(comment.getCreatedAt().toEpochMilli());
-        dto.setIdCom(comment.getId());
-        dto.setText(comment.getText());
+        dto.setAuthor(entity.getUser().getId());
+        dto.setAuthorFirstName(entity.getUser().getFirstName());
+        dto.setIdCom(entity.getId());
+
+        if (entity.getUser().getImage() != null) {
+            dto.setImageUser(String.format("/ads/image/%s", entity.getUser().getImage()));
+        } else {
+            dto.setImageUser(null);
+        }
+
+        dto.setCreatedAt(ldt);
+        dto.setText(entity.getText());
 
         return dto;
     }

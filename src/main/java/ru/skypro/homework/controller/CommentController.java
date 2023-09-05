@@ -112,11 +112,11 @@ public class CommentController {
             responseCode = "403",
             description = "отсутствуют права доступа"
     )
-    public ResponseEntity<CommentDto> updateComment(@PathVariable Integer adId,
+    public ResponseEntity<CommentDto> updateComment(@PathVariable Integer adsId,
                                                     @PathVariable Integer commentId,
                                                     @RequestBody CommentDto comment,
                                                     Principal principal) {
-        CommentDto commentDto = commentService.updateComment(adId, commentId, comment, principal.getName());
+        CommentDto commentDto = commentService.updateComment(adsId, commentId, comment, principal.getName());
         if (commentDto == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
