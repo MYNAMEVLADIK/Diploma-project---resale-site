@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.dto.NewPasswordDto;
+import ru.skypro.homework.dto.UpdateUserDto;
 import ru.skypro.homework.dto.UserDto;
 import ru.skypro.homework.entity.User;
 import ru.skypro.homework.service.PictureService;
@@ -33,7 +34,7 @@ public class UserController {
 
     private final UserService userService;
     private final PictureService pictureService;
-
+    @PostMapping("/set_password")
     @Operation(
             summary = "Обновление пароля",
             responses = {
@@ -132,7 +133,7 @@ public class UserController {
             },
             tags = "Пользователи"
     )
-    public ResponseEntity<UserDto> updateUser(@RequestBody UserDto dto,
+    public ResponseEntity<UserDto> updateUser(@RequestBody UpdateUserDto dto,
                                               Principal principal) {
             UserDto userDto = userService.updateUser(dto, principal.getName());
             if (userDto == null) {
