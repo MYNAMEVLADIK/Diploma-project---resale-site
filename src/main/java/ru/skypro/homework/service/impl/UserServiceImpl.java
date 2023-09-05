@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 import ru.skypro.homework.dto.NewPasswordDto;
+import ru.skypro.homework.dto.UpdateUserDto;
 import ru.skypro.homework.dto.UserDto;
 import ru.skypro.homework.entity.User;
 import ru.skypro.homework.exceptions.NotFoundEntityException;
@@ -70,21 +71,19 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     @Transactional
-    public UserDto updateUser(UserDto user, String username) {
+    public UserDto updateUser(UpdateUserDto user, String username) {
 
         User userDB = userRepository.findByUsername(username);
-        userDB.setId(user.getId());
         userDB.setFirstName(user.getFirstName());
         userDB.setLastName(user.getLastName());
         userDB.setPhone(user.getPhone());
-        userDB.setImage(user.getImage());
-        userDB.setEmail(user.getEmail());
 
         userRepository.save(userDB);
 
         return userMapper.mapToDto(userDB);
 
     }
+
 
     /**
      * Метод для обновления аватара пользователя

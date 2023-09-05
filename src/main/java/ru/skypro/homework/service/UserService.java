@@ -24,7 +24,7 @@ public interface UserService {
     /**
      * Обновить информацию об авторизованном пользователе
      */
-    UserDto updateUser(UserDto user, String username);
+    UserDto updateUser(UpdateUserDto user, String username);
 
     /**
      * Обновить аватар авторизованного пользователя
