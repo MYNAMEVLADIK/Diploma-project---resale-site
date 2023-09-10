@@ -1,5 +1,6 @@
 package ru.skypro.homework.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
+    @JsonIgnore
     private Integer id;
 
     /**
@@ -30,6 +32,7 @@ public class User {
      */
     @Column(name = "username")
     @NotNull
+    @JsonIgnore
     private String username;
 
     /**
@@ -85,6 +88,7 @@ public class User {
      * Объявления пользователя
      */
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
     private Collection<Ads> ads;
 
     @Override
