@@ -6,6 +6,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Collection;
 
 @Entity
@@ -34,26 +36,29 @@ public class Ads {
     /**
      * Название объявления
      */
-    @Column(name = "description")
-    private String description;
+    @Column(name = "description", length = 50)
+    @NotBlank
+    private String name;
 
     /**
      * Цена объявления
      */
     @Column(name = "price")
+    @NotNull
     private Integer price;
 
     /**
      * Описание объявления
      */
-    @Column(name = "title")
+    @Column(name = "title", length = 100)
+    @NotBlank
     private String title;
 
     /**
      * Картинка объявления
      */
-    @Column(name = "image_path")
-    private String imagePath;
+    @Column(name = "image")
+    private String image;
 
     /**
      * Комментарии объявления

@@ -1,47 +1,69 @@
 package ru.skypro.homework.service.impl;
 
-import org.springframework.security.core.userdetails.User;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
-import ru.skypro.homework.dto.Register;
+import org.springframework.web.server.ResponseStatusException;
+import ru.skypro.homework.dto.RegisterDto;
+import ru.skypro.homework.dto.RoleDto;
+import ru.skypro.homework.entity.User;
+import ru.skypro.homework.repository.UserRepository;
 import ru.skypro.homework.service.AuthService;
+import ru.skypro.homework.mapping.UserMappingService;
 
+/**
+ * Класс - сервис, по работе с авторизацией и регистрацией
+ */
 @Service
+@AllArgsConstructor
 public class AuthServiceImpl implements AuthService {
 
-    private final UserDetailsManager manager;
     private final PasswordEncoder encoder;
+    private final UserMappingService userMapperUtils;
+    private final UserRepository userRepository;
+    private final UserDetailsService userDetailsService;
 
-    public AuthServiceImpl(UserDetailsManager manager,
-                           PasswordEncoder passwordEncoder) {
-        this.manager = manager;
-        this.encoder = passwordEncoder;
-    }
-
+    /**
+     * Метод для входа в учетную запись
+     */
     @Override
     public boolean login(String userName, String password) {
-        if (!manager.userExists(userName)) {
-            return false;
+
+        User user = userRepository.findByUsername(userName);
+
+        if (user == null
+                || !user.getUsername().equals(userName)
+                && !user.getPassword().equals(encoder.encode(password))) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
         }
-        UserDetails userDetails = manager.loadUserByUsername(userName);
+
+        UserDetails userDetails = userDetailsService.loadUserByUsername(userName);
         return encoder.matches(password, userDetails.getPassword());
     }
 
+    /**
+     * Метод для создания учетной записи
+     */
     @Override
-    public boolean register(Register register) {
-        if (manager.userExists(register.getUsername())) {
+    public boolean register(RegisterDto registerReq, RoleDto role) {
+
+        User user = userRepository.findByUsername(registerReq.getUsername());
+        if (user != null) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            registerReq.setRole(role);
+            registerReq.setPassword(encoder.encode(registerReq.getPassword()));
+            User newUser = userMapperUtils.mapToEntity(registerReq);
+            userRepository.save(newUser);
+            return true;
+        } catch (RuntimeException e) {
+            e.getStackTrace();
             return false;
         }
-        manager.createUser(
-                User.builder()
-                        .passwordEncoder(this.encoder::encode)
-                        .password(register.getPassword())
-                        .username(register.getUsername())
-                        .roles(register.getRole().name())
-                        .build());
-        return true;
     }
-
 }

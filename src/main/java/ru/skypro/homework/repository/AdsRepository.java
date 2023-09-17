@@ -7,16 +7,19 @@ import ru.skypro.homework.entity.User;
 
 import java.util.List;
 
+/**
+ * Класс - репозиторий по работе с объявлениями
+ */
 @Repository
 public interface AdsRepository extends JpaRepository<Ads, Integer> {
 
     /**
      * Поиск объявления по названию
      */
-    List<Ads> SearchRorAnAdByName(String description);
+    List<Ads> searchRorAnAdByName(String name);
 
     /**
      * Поиск объявлений по пользователю
      */
-    List<Ads> findByUser(User user);
+   List<Ads> findByUser(User user);
 }

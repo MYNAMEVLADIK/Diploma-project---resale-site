@@ -5,6 +5,8 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.Instant;
 
 @Entity
@@ -31,7 +33,8 @@ public class Comment {
     /**
      * Текст комментария
      */
-    @Column(name = "text")
+    @Column(name = "textt", length = 50)
+    @NotBlank
     private String text;
 
     /**
@@ -39,11 +42,13 @@ public class Comment {
      */
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
     @JoinColumn(name = "ads_id")
+    @NotNull
     private Ads ads;
 
     /**
      * Дата и время комментария
      */
     @Column(name = "create_at")
+    @NotNull
     private Instant createdAt;
 }
